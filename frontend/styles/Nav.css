@@ -1,0 +1,63 @@
+/* Ensure navbar is properly aligned */
+.nav-container {
+  width: 100%;
+  background: #1a1a1a;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 10px 20px;
+}
+
+/* Align everything in a single row */
+nav {
+  display: flex;
+  justify-content: space-between; /* Space between logo and logout */
+  align-items: center;
+  height: 60px;
+}
+
+/* Ensure logo and text are in one line */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Center text properly */
+.logo-text {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+/* Logout button styling */
+.logout-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.logout-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: none; /* Hide by default */
+}
+
+/* Show only if logged in */
+.logged-in .logout-icon {
+  display: block;
+}

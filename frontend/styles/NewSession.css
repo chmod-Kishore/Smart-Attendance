@@ -1,0 +1,46 @@
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0); /* Fully transparent */
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+  }
+}
+
+.new-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+h5 {
+  color: white;
+  margin-top: 0;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+.new-popup-inner {
+  text-align: center;
+}
+
+.new-popup-inner h2 {
+  margin-top: 0;
+}
+
+.new-popup-inner button {
+  margin-top: 10px;
+}
+
+.qr-code {
+  align-items: center;
+}
+
+.QRCode {
+  border: 2px solid #000;
+  border-radius: 10px;
+}
