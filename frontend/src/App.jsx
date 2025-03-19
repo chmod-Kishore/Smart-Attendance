@@ -10,7 +10,7 @@ import {
   NewSession,
   StudentDashboard,
   ForgotPassword,
-} from "../pages";
+} from "../pages/Index";
 
 const router = createBrowserRouter([
   {

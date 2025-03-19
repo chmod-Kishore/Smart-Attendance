@@ -1,40 +1,147 @@
+/* ✅ Sidebar Styling */
+/* ✅ Sidebar Styling */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #1e1e1e;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* ✅ Centers content inside */
+  position: fixed;
+  left: 0;
+  top: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ Centering the "Join Class" Button */
+.join-class-btn {
+  padding: 12px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: 0.3s;
+  text-align: center;
+}
+
+.join-class-btn:hover {
+  background: #0056b3;
+}
+
+/* ✅ Main Dashboard Styling */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  padding-left: 220px; /* ✅ Adjust for sidebar */
+}
+
+/* ✅ Centering the Content */
 .dashboard-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    padding: 20px;
-    font-size: 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ✅ Course List Styling */
+.course-list {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  width: 50%;
+  max-width: 500px;
+  text-align: center;
+}
+
+/* ✅ Popup Styling (Square & Centered) */
+.popup-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  width: 300px;  /* ✅ Square Shape */
+  height: 300px;
+  text-align: center;
+}
+
+/* ✅ Input Field Styling */
+.popup-overlay input {
+  padding: 10px;
+  margin: 15px 0;
+  width: 85%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* ✅ Button Group Styling */
+.popup-overlay .button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.popup-overlay button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* ✅ Join Button */
+.popup-overlay .join-btn {
+  background: #007bff;
+  color: white;
+}
+
+.popup-overlay .join-btn:hover {
+  background: #0056b3;
+}
+
+/* ✅ Cancel Button */
+.popup-overlay .close-btn {
+  background: red;
+  color: white;
+}
+
+.popup-overlay .close-btn:hover {
+  background: darkred;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 180px;
   }
-  
-  .session-list {
-    width: 90%;
-    max-width: 800px;
+
+  .dashboard-container {
+    padding-left: 180px;
   }
-  
-  .logout {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 10px 15px;
-    background: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
+
   .popup-overlay {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    width: 250px;
+    height: 250px;
   }
-  
+}

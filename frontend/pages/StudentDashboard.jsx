@@ -2,138 +2,102 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/StudentDashboard.css";
 import { useNavigate } from "react-router-dom";
-import StudentForm from "./StudentForm";
 
-const queryParameters = new URLSearchParams(window.location.search);
-
-const Dashboard = () => {
+const StudentDashboard = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [sessionList, setSessionList] = useState([]);
-  const [isSessionDisplay, setSessionDisplay] = useState(false);
-  const [showLogout, setShowLogout] = useState(false); // ✅ State for Logout button visibility
-
+  const [courses, setCourses] = useState([]); // ✅ Store enrolled courses
+  const [showJoinClass, setShowJoinClass] = useState(false); // ✅ Control Join Class popup
+  const [joinCode, setJoinCode] = useState(""); // ✅ Store input for joining course
   const navigate = useNavigate();
 
-  function getStudentSessions() {
+  // ✅ Fetch Student's Enrolled Courses
+  const getStudentCourses = () => {
     axios
-      .post("http://localhost:5050/sessions/getStudentSessions", { token })
+      .post("http://localhost:5050/students/getCourses", { token })
       .then((response) => {
-        setSessionList(response.data.sessions);
+        setCourses(response.data.courses || []); // Ensure it's always an array
       })
       .catch((error) => {
-        console.log(error);
+        console.log("Error fetching courses:", error);
+        setCourses([]); // Prevents crashes if API fails
       });
-  }
+  };
 
-  function toggleStudentForm(action) {
-    if (action === "open") {
-      setSessionDisplay(true);
-    } else {
-      localStorage.removeItem("session_id");
-      localStorage.removeItem("teacher_email");
-      setSessionDisplay(false);
-    }
-  }
+  // ✅ Handle Joining a Course
+  const joinCourse = () => {
+    if (!joinCode.trim()) return alert("Enter a valid invitation code!");
 
-  function getDistance(distance, radius) {
-    return {
-      distance,
-      color: distance <= parseFloat(radius) ? "green" : "red",
-    };
-  }
+    axios
+      .post("http://localhost:5050/students/joinCourse", {
+        token,
+        courseId: joinCode,
+      })
+      .then((response) => {
+        alert("Joined course successfully!");
+        getStudentCourses(); // Refresh course list
+        setShowJoinClass(false); // Hide popup after joining
+      })
+      .catch((error) => {
+        console.log("Error joining course:", error);
+        alert("Failed to join course. Check your code.");
+      });
+  };
 
+  // ✅ Redirect to Login if No Token
   useEffect(() => {
     if (!token) {
       navigate("/login");
     } else {
-      getStudentSessions();
-      setShowLogout(true);
-
-      try {
-        if (queryParameters.get("session_id") && queryParameters.get("email")) {
-          localStorage.setItem("session_id", queryParameters.get("session_id"));
-          localStorage.setItem("teacher_email", queryParameters.get("email"));
-        }
-
-        if (
-          !localStorage.getItem("session_id") &&
-          !localStorage.getItem("teacher_email")
-        ) {
-          toggleStudentForm("close");
-        }
-      } catch (err) {
-        console.log(err);
-      }
+      getStudentCourses();
     }
   }, [token]);
 
   return (
-    <div className="dashboard-main">
-      <button
-        className="open-form-btn"
-        onClick={() => toggleStudentForm("open")}
-      >
-        Submit Attendance
-      </button>
+    <div className="dashboard-container">
+      {/* ✅ Sidebar */}
+      <div className="sidebar">
+        <button className="join-class-btn" onClick={() => setShowJoinClass(true)}>
+          Join Class
+        </button>
+      </div>
 
-      {!isSessionDisplay && (
-        <div className="session-list">
-          <h2>Your Sessions</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Duration</th>
-                <th>Distance</th>
-                <th>Image</th>
-              </tr>
-            </thead>
-            {sessionList.length > 0 ? (
-              sessionList.map((session, index) => {
-                return (
-                  <tbody key={index}>
-                    <tr key={index + "0"} className="session">
-                      <th key={index + "2"}>{session.name}</th>
-                      <th key={index + "3"}>{session.date.split("T")[0]}</th>
-                      <th key={index + "4"}>{session.time}</th>
-                      <th key={index + "5"}>{session.duration}</th>
-                      <th
-                        key={index + "6"}
-                        className="distance"
-                        style={{
-                          color: getDistance(session.distance, session.radius)
-                            .color,
-                        }}
-                      >
-                        {getDistance(session.distance, session.radius).distance}
-                      </th>
-                      <th key={index + "7"}>
-                        <img src={session.image} alt="session" width={200} />
-                      </th>
-                    </tr>
-                  </tbody>
-                );
-              })
-            ) : (
-              <tbody>
-                <tr>
-                  <td>No sessions found</td>
-                </tr>
-              </tbody>
-            )}
-          </table>
-        </div>
-      )}
+      {/* ✅ Main Content */}
+      <div className="dashboard-main">
+        <h2>Welcome to Your Student Dashboard</h2>
 
-      {isSessionDisplay && (
-        <div className="popup-overlay">
-          <StudentForm togglePopup={toggleStudentForm} />
+        {/* ✅ Join Class Popup */}
+        {showJoinClass && (
+          <div className="popup-overlay">
+          <h3>Enter Invitation Code</h3>
+          <input
+            type="text"
+            placeholder="Enter Invitation Code"
+            value={joinCode}
+            onChange={(e) => setJoinCode(e.target.value)}
+          />
+          <button className="join-btn" onClick={joinCourse}>Join</button>
+          <button className="close-btn" onClick={() => setShowJoinClass(false)}>Cancel</button>
         </div>
-      )}
+       )}
+
+        {/* ✅ List Enrolled Courses */}
+        <div className="course-list">
+          <h3>Your Enrolled Courses</h3>
+          {courses.length > 0 ? (
+            <ul>
+              {courses.map((course, index) => (
+                <li key={index}>
+                  {course.courseName} ({course.courseId})
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>You are not enrolled in any courses yet.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default StudentDashboard;
