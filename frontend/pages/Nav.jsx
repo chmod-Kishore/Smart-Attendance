@@ -11,7 +11,6 @@ const Nav = () => {
     const storedUser = {
       email: localStorage.getItem("email"),
       name: localStorage.getItem("name"),
-      pno: localStorage.getItem("pno"),
       dob: localStorage.getItem("dob"),
     };
     if (storedUser.email) {

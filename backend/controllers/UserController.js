@@ -36,47 +36,59 @@ async function Login(req, res) {
 }
 // Create a new user
 async function Signup(req, res) {
-  const { name, email, pno, dob, password, type } = req.body;
-  if (type === "student") {
-    const user = new Student({
-      name: name,
-      email: email,
-      pno: pno,
-      dob: dob,
-      password: password,
-    });
-    try {
-      const existingUser = await Student.findOne({ email: email }).exec();
+  const { name, email, rollNo, dob, branch, dept, password, type } = req.body;
+
+  try {
+    if (type === "student") {
+      // Check if student already exists
+      const existingUser = await Student.findOne({ email }).exec();
       if (existingUser) {
-        return res.status(400).json({ message: "User already exists" });
-      } else {
-        const newUser = await user.save();
-        res.status(201).json(newUser);
+        return res.status(400).json({ message: "Student already exists" });
       }
-    } catch (err) {
-      res.status(400).json({ message: err.message });
-    }
-  } else {
-    const user = new Teacher({
-      name: name,
-      email: email,
-      pno: pno,
-      dob: dob,
-      password: password,
-    });
-    try {
-      const existingUser = await Teacher.findOne({ email: email }).exec();
+
+      // Create new student
+      const newUser = new Student({
+        name,
+        email,
+        rollNo, // Roll number is required for students
+        dob,
+        branch,
+        dept,
+        password,
+      });
+
+      await newUser.save();
+      res
+        .status(201)
+        .json({ message: "Student registered successfully", newUser });
+    } else if (type === "teacher") {
+      // Check if teacher already exists
+      const existingUser = await Teacher.findOne({ email }).exec();
       if (existingUser) {
-        return res.status(400).json({ message: "User already exists" });
-      } else {
-        const newUser = await user.save();
-        res.status(201).json(newUser);
+        return res.status(400).json({ message: "Teacher already exists" });
       }
-    } catch (err) {
-      res.status(400).json({ message: err.message });
+
+      // Create new teacher
+      const newUser = new Teacher({
+        name,
+        email,
+        dob,
+        dept,
+        password,
+      });
+
+      await newUser.save();
+      res
+        .status(201)
+        .json({ message: "Teacher registered successfully", newUser });
+    } else {
+      res.status(400).json({ message: "Invalid user type" });
     }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 }
+
 //change password
 async function ForgotPassword(req, res) {
   const { email, password } = req.body;
@@ -94,14 +106,14 @@ async function ForgotPassword(req, res) {
 
 //edit user details
 async function EditUserDetails(req, res) {
-  const { email, name, pno, dob } = req.body;
+  const { email, name, dob } = req.body;
   //check if user is a student
   let user = await Student.findOne
-    .findOneAndUpdate({ email }, { name, pno, dob })
+    .findOneAndUpdate({ email }, { name, dob })
     .exec();
   if (!user) {
     user = await Teacher.findOneAndUpdate
-      .findOneAndUpdate({ email }, { name, pno, dob })
+      .findOneAndUpdate({ email }, { name, dob })
       .exec();
   }
   if (user) {

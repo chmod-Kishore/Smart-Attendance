@@ -3,19 +3,17 @@ import "../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import image512 from "../assets/logo512.png";
-import image192 from "../assets/logo192.png";
 import { SHA256 } from "crypto-js";
 import see from "../assets/see.png";
 import hide from "../assets/hide.png";
 
 const Signup = () => {
-  // eslint-disable-next-line
   const [showPassword, setShowPassword] = useState(false);
-  // eslint-disable-next-line
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [SaveOTP, setOtp] = useState(
     Math.floor(100000 + Math.random() * 900000) || 0
   );
+  const [userType, setUserType] = useState("student");
   const navigate = useNavigate();
 
   function computeHash(input) {
@@ -25,26 +23,31 @@ const Signup = () => {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     let name = e.target.name.value;
-    let date = e.target.dob.value;
-    let pno = e.target.pno.value;
     let email = e.target.email.value;
-    let type = e.target.type.value;
     let password = e.target.password.value;
     let confirmPassword = e.target.confirmPassword.value;
+    let dob = e.target.dob.value;
+    let dept = e.target.dept.value;
+
+    // Student-specific fields
+    let rollNo = userType === "student" ? e.target.rollNo.value : null;
+    let branch = userType === "student" ? e.target.branch.value : null;
 
     if (password.length > 0 && confirmPassword.length > 0) {
       if (password === confirmPassword) {
         password = computeHash(password);
-        //add email to the password to make it unique
         password = computeHash(email + password);
+
         const formData = {
           name,
           email,
           password,
-          pno,
-          type,
-          dob: date,
+          dob,
+          dept,
+          ...(userType === "student" && { rollNo, branch }),
+          type: userType,
         };
+
         try {
           await axios.post("http://localhost:5050/users/signup", formData);
           navigate("/login");
@@ -59,13 +62,6 @@ const Signup = () => {
     }
   };
 
-  const toggleOne = () => {
-    document.querySelector(".first-slide").style.display = "block";
-    document.querySelector(".second-slide").style.display = "none";
-    document.querySelector(".third-slide").style.display = "none";
-    document.querySelector(".fourth-slide").style.display = "none";
-  };
-
   const toggleTwo = async () => {
     let name = document.querySelector("input[name='name']").value;
     let email = document.querySelector("input[name='email']").value;
@@ -73,60 +69,43 @@ const Signup = () => {
     if (name.length === 0 || email.length === 0) {
       alert("Please fill all the fields");
       return;
-    } else {
-      document.querySelector(".first-slide").style.display = "none";
-      document.querySelector(".second-slide").style.display = "block";
-      document.querySelector(".third-slide").style.display = "none";
-      document.querySelector(".fourth-slide").style.display = "none";
     }
 
-    await axios
-      .post("http://localhost:5050/users/sendmail", {
-        email: email,
-      })
-      .then((res) => {
-        setOtp(res.data.otp);
-      })
-      .catch((err) => {
-        console.log(err);
+    document.querySelector(".first-slide").style.display = "none";
+    document.querySelector(".second-slide").style.display = "block";
+
+    try {
+      const res = await axios.post("http://localhost:5050/users/sendmail", {
+        email,
       });
+      setOtp(res.data.otp);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const toggleThree = () => {
-    //check if the otp is correct and then move to the next slide
     let otp = document.querySelector("input[name='otp']").value;
     if (otp.length === 0) {
-      alert("Please Enter OTP");
+      alert("Please enter OTP");
+    } else if (parseInt(otp) === parseInt(SaveOTP)) {
+      document.querySelector(".second-slide").style.display = "none";
+      document.querySelector(".third-slide").style.display = "block";
     } else {
-      if (parseInt(otp) === parseInt(SaveOTP)) {
-        document.querySelector(".first-slide").style.display = "none";
-        document.querySelector(".second-slide").style.display = "none";
-        document.querySelector(".third-slide").style.display = "block";
-        document.querySelector(".fourth-slide").style.display = "none";
-      } else {
-        alert("Invalid OTP");
-      }
+      alert("Invalid OTP");
     }
   };
 
   const toggleFour = () => {
-    let pno = document.querySelector("input[name='pno']").value;
-    let dob = document.querySelector("input[name='dob']").value;
-    if (pno.length === 0 || dob.length === 0) {
-      alert("Please fill all the fields");
-    } else {
-      document.querySelector(".first-slide").style.display = "none";
-      document.querySelector(".second-slide").style.display = "none";
-      document.querySelector(".third-slide").style.display = "none";
-      document.querySelector(".fourth-slide").style.display = "block";
-    }
+    document.querySelector(".third-slide").style.display = "none";
+    document.querySelector(".password-slide").style.display = "block";
   };
 
   useEffect(() => {
     if (token !== "") {
       navigate("/dashboard");
     }
-  });
+  }, [token, navigate]);
 
   return (
     <div className="register-main">
@@ -142,126 +121,92 @@ const Signup = () => {
             <h2>Welcome to our website!</h2>
             <p>Please enter your details</p>
             <form onSubmit={handleRegisterSubmit}>
+              {/* Step 1: Basic Details */}
               <div className="first-slide">
-                <select name="type" id="type">
+                <select
+                  name="type"
+                  id="type"
+                  value={userType}
+                  onChange={(e) => setUserType(e.target.value)}
+                >
                   <option value="student">Student</option>
                   <option value="teacher">Teacher</option>
                 </select>
-                <input
-                  type="text"
-                  placeholder="Name"
-                  name="name"
-                  required={true}
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  name="email"
-                  required={true}
-                />
+                <input type="text" placeholder="Name" name="name" required />
+                <input type="email" placeholder="Email" name="email" required />
 
                 <button type="button" onClick={toggleTwo}>
                   Next
                 </button>
               </div>
+
+              {/* Step 2: OTP Verification */}
               <div className="second-slide" style={{ display: "none" }}>
-                <input
-                  type="text"
-                  placeholder="OTP"
-                  name="otp"
-                  required={true}
-                />
-                <button type="button" onClick={toggleOne}>
+                <input type="text" placeholder="OTP" name="otp" required />
+                <button type="button" onClick={() => window.location.reload()}>
                   Edit Email
                 </button>
                 <button type="button" onClick={toggleThree}>
                   Submit
                 </button>
               </div>
+
+              {/* Step 3: Additional Details */}
               <div className="third-slide" style={{ display: "none" }}>
+                {userType === "student" && (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Roll No"
+                      name="rollNo"
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Branch"
+                      name="branch"
+                      required
+                    />
+                  </>
+                )}
                 <input
                   type="text"
-                  placeholder="Phone"
-                  name="pno"
-                  required={true}
+                  placeholder="Department"
+                  name="dept"
+                  required
                 />
-                <input type="date" name="dob" id="dob" />
-                <button type="button" onClick={toggleOne}>
-                  Back
-                </button>
+                <input type="date" name="dob" required />
+
                 <button type="button" onClick={toggleFour}>
                   Next
                 </button>
               </div>
-              <div className="fourth-slide" style={{ display: "none" }}>
-                <div className="pass-input-div">
+
+              {/* Step 4: Password Fields */}
+              <div className="password-slide" style={{ display: "none" }}>
+                <div className="password-container">
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
                     name="password"
-                    required={true}
+                    required
                   />
-                  {showPassword ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPassword(false);
-                      }}
-                      style={{ color: "white", padding: 0 }}
-                    >
-                      <img className="hide" src={hide} alt="hide" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPassword(true);
-                      }}
-                      style={{ color: "white", padding: 0 }}
-                    >
-                      <img className="see" src={see} alt="see" />
-                    </button>
-                  )}
-                </div>
-                <div className="pass-input-div">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Confirm Password"
-                    name="confirmPassword"
-                    required={true}
+                  <img
+                    src={showPassword ? see : hide}
+                    onClick={() => setShowPassword(!showPassword)}
+                    alt="Toggle visibility"
+                    className="password-toggle-icon"
                   />
-                  {showPassword ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPassword(false);
-                      }}
-                      style={{ color: "white", padding: 0 }}
-                    >
-                      <img className="hide" src={hide} alt="hide" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPassword(true);
-                      }}
-                      style={{ color: "white", padding: 0 }}
-                    >
-                      <img className="see" src={see} alt="see" />
-                    </button>
-                  )}
                 </div>
-                <button
-                  type="button"
-                  onClick={toggleThree}
-                  style={{ width: 100 + "%", marginBottom: 10 + "px" }}
-                >
-                  Back
-                </button>
-                <div className="register-center-buttons">
-                  <button type="submit">Sign Up</button>
-                </div>
+
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  name="confirmPassword"
+                  required
+                />
+
+                <button type="submit">Sign Up</button>
               </div>
             </form>
           </div>

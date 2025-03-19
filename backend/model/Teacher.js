@@ -1,37 +1,12 @@
-import mongoose from "mongoose";
-const schema = mongoose.Schema;
+import mongoose, { model, Schema } from "mongoose";
 
-const userSchema = new schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    pno: { type: String, required: true },
-    dob: { type: String, required: true },
-    password: { type: String, required: true }, // Password save as hash
-    sessions: [
-      {
-        session_id: { type: String, required: true },
-        date: { type: Date, required: true },
-        time: { type: String, required: true },
-        name: { type: String, required: true },
-        duration: { type: String, required: true },
-        location: { type: String, required: true },
-        radius: { type: String, required: true },
-        attendance: [
-          {
-            regno: { type: String, required: true },
-            image: { type: String, required: true },
-            IP: { type: String, required: true },
-            date: { type: Date, required: true },
-            student_email: { type: String, required: true },
-            Location: { type: String, required: true },
-            distance: { type: String, required: true },
-          },
-        ],
-      },
-    ],
-  },
-  { timestamps: true }
-);
+const teacherSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  dob: { type: String, required: true },
+  dept: { type: String, required: true },
+  password: { type: String, required: true },
+  courses: [{ type: Schema.Types.ObjectId, ref: "Course" }], // List of courses created by teacher
+});
 
-export const Teacher = mongoose.model("teacher", userSchema);
+export const Teacher = model("Teacher", teacherSchema);

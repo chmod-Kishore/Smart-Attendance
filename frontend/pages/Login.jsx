@@ -4,17 +4,13 @@ import { SHA256 } from "crypto-js";
 import axios from "axios";
 import "../styles/Login.css";
 import image512 from "../assets/logo512.png";
-import image192 from "../assets/logo192.png";
 import see from "../assets/see.png";
 import hide from "../assets/hide.png";
 
-const queryParameters = new URLSearchParams(window.location.search);
 axios.defaults.withCredentials = true;
 
 const Login = () => {
-  // eslint-disable-next-line
   const [showPassword, setShowPassword] = useState(false);
-  // eslint-disable-next-line
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const navigate = useNavigate();
 
@@ -23,86 +19,52 @@ const Login = () => {
   }
 
   const handleLoginSubmit = async (e) => {
-    let session_id = "";
-    let teacher = "";
-    try {
-      session_id = queryParameters.get("session_id");
-      teacher = queryParameters.get("email");
-    } catch (err) {
-      console.log("No query parameters");
-    }
-
     e.preventDefault();
     let email = e.target.email.value;
     let password = e.target.password.value;
 
-    if (email.length > 0 && password.length > 0) {
+    if (email && password) {
       password = computeHash(password);
       password = computeHash(email + password);
-      const formData = {
-        email,
-        password,
-      };
+      const formData = { email, password };
       try {
         const response = await axios.post(
           "http://localhost:5050/users/signin",
           formData
         );
-        let user = response.data.user;
-        let type = response.data.type;
-        let token = response.data.token;
+        const { user, type, token } = response.data;
+
         localStorage.setItem("email", user.email);
         localStorage.setItem("name", user.name);
-        localStorage.setItem("pno", user.pno);
         localStorage.setItem("dob", user.dob);
         localStorage.setItem("type", type);
         localStorage.setItem("token", token);
-        if (response.data.type === "student") {
-          if (session_id !== "" && teacher !== "") {
-            navigate(
-              "/student-dashboard?session_id=" +
-                session_id +
-                "&email=" +
-                teacher
-            );
-          } else {
-            navigate("/student-dashboard");
-          }
+
+        if (type === "student") {
+          localStorage.setItem("rollNo", user.rollNo);
+          localStorage.setItem("branch", user.branch);
+          localStorage.setItem("dept", user.dept);
+          navigate("/student-dashboard");
         } else {
+          localStorage.setItem("dept", user.dept);
           navigate("/teacher-dashboard");
         }
       } catch (err) {
         alert("Invalid email or password");
-        e.target.email.value = "";
-        e.target.password.value = "";
+        e.target.reset();
       }
     } else {
-      alert("Please fill all the fields");
-      e.target.email.value = "";
-      e.target.password.value = "";
+      alert("Please fill all fields");
+      e.target.reset();
     }
   };
 
   useEffect(() => {
-    let session_id = "";
-    let teacher = "";
-    try {
-      session_id = queryParameters.get("session_id");
-      teacher = queryParameters.get("email");
-    } catch (err) {
-      console.log("No query parameters");
-    }
-    if (token !== "" && token !== undefined) {
+    if (token) {
       if (localStorage.getItem("type") === "teacher") {
         navigate("/teacher-dashboard");
       } else {
-        if (session_id !== "" && teacher !== "") {
-          navigate(
-            "/student-dashboard?session_id=" + session_id + "&email=" + teacher
-          );
-        } else {
-          navigate("/student-dashboard");
-        }
+        navigate("/student-dashboard");
       }
     }
   }, [token]);
@@ -121,46 +83,29 @@ const Login = () => {
             <h2>Welcome back!</h2>
             <p>Please enter your details</p>
             <form onSubmit={handleLoginSubmit}>
-              <input type="email" placeholder="Email" name="email" />
-              <div className="pass-input-div">
+              <input type="email" placeholder="Email" name="email" required />
+
+              <div className="password-container">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   name="password"
+                  required
                 />
-                {showPassword ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowPassword(false);
-                    }}
-                    style={{ color: "white", padding: 0 }}
-                  >
-                    <img className="hide" src={hide} alt="hide" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowPassword(true);
-                    }}
-                    style={{ color: "white", padding: 0 }}
-                  >
-                    <img className="see" src={see} alt="see" />
-                  </button>
-                )}
+                <img
+                  src={showPassword ? hide : see}
+                  onClick={() => setShowPassword(!showPassword)}
+                  alt="Toggle visibility"
+                  className="password-toggle-icon"
+                />
               </div>
 
               <div className="login-center-options">
-                <div className="remember-div"></div>
-                <a
-                  href="/forgot-password"
-                  className="forgot-pass-link"
-                  style={{ color: "#76ABAE" }}
-                >
+                <Link to="/forgot-password" className="forgot-pass-link">
                   Forgot password?
-                </a>
+                </Link>
               </div>
+
               <div className="login-center-buttons">
                 <button type="submit">Log In</button>
               </div>
@@ -168,10 +113,7 @@ const Login = () => {
           </div>
 
           <p className="login-bottom-p">
-            Don't have an account?{" "}
-            <Link to="/register" style={{ color: "#76ABAE" }}>
-              Sign Up
-            </Link>
+            Don't have an account? <Link to="/register">Sign Up</Link>
           </p>
         </div>
       </div>

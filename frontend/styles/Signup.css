@@ -128,3 +128,24 @@ form button[type="button"] {
 .register-bottom-p a:hover {
   text-decoration: underline;
 }
+
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-container input {
+  flex: 1;
+  padding-right: 40px; /* Space for the eye icon */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}

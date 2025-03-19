@@ -1,8 +1,8 @@
-/* Ensure navbar is properly aligned */
+/* Navbar Styling */
 .nav-container {
   width: 100%;
-  background: #1a1a1a;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  background: #f8f9fa; /* Whitish background with contrast */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
@@ -14,12 +14,12 @@
 /* Align everything in a single row */
 nav {
   display: flex;
-  justify-content: space-between; /* Space between logo and logout */
+  justify-content: space-between;
   align-items: center;
   height: 60px;
 }
 
-/* Ensure logo and text are in one line */
+/* Logo and text styling */
 .logo-container {
   display: flex;
   align-items: center;
@@ -33,11 +33,10 @@ nav {
   object-fit: cover;
 }
 
-/* Center text properly */
 .logo-text {
   font-size: 22px;
   font-weight: bold;
-  color: white;
+  color: #333; /* Dark gray for contrast */
   display: flex;
   align-items: center;
 }
@@ -47,17 +46,25 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20px;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .logout-icon {
   width: 30px;
   height: 30px;
-  cursor: pointer;
-  display: none; /* Hide by default */
 }
 
-/* Show only if logged in */
-.logged-in .logout-icon {
-  display: block;
+/* Hide logout icon by default */
+.logout-container {
+  display: none;
+}
+
+/* Show logout button when user is logged in */
+.logged-in .logout-container {
+  display: flex;
 }
