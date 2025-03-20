@@ -40,6 +40,7 @@ const Login = () => {
         localStorage.setItem("type", type);
         localStorage.setItem("token", token);
 
+        setToken(token);
         if (type === "student") {
           localStorage.setItem("rollNo", user.rollNo);
           localStorage.setItem("branch", user.branch);

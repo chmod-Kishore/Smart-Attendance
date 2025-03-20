@@ -46,17 +46,22 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto; /* Pushes logout to the right */
+  padding-right: 20px; /* Ensures spacing from the right edge */
 }
 
-.logout-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.logout-icon {
+/* SVG Logout Icon */
+.logout-container svg {
   width: 30px;
   height: 30px;
+  stroke: black; /* Icon color */
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Add hover effect */
+.logout-container svg:hover {
+  transform: scale(1.1);
 }
 
 /* Hide logout icon by default */
@@ -67,4 +72,29 @@ nav {
 /* Show logout button when user is logged in */
 .logged-in .logout-container {
   display: flex;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .nav-container {
+    padding: 10px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+  }
+
+  .logout-container {
+    padding-right: 10px;
+  }
+
+  .logout-container svg {
+    width: 25px;
+    height: 25px;
+  }
 }

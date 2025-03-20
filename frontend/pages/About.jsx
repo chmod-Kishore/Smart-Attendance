@@ -143,7 +143,7 @@ const About = ({ toggleDone }) => {
 
   return (
     <div className="slider">
-      <h2>Tutorial</h2>
+      <h2 style={{ textAlign: "center" }}>Tutorial</h2>
       <div className="slides">
         {assets.map((e, i) => (
           <Slide key={e.caption} {...e} active={i === active} />
