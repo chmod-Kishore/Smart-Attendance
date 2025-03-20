@@ -1,57 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Nav.css";
-import UserDetails from "./UserDetails";
-import logout from "../assets/logout.png";
+import Person4Icon from "@mui/icons-material/Person4"; // User Icon
+import LogoutIcon from "@mui/icons-material/Logout"; // Logout Icon
 
 const Nav = () => {
-  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("email"));
+  const [userDetails, setUserDetails] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = {
-      email: localStorage.getItem("email"),
-      name: localStorage.getItem("name"),
-      dob: localStorage.getItem("dob"),
-    };
-    if (storedUser.email) {
-      setUser(storedUser);
-    } else {
-      setUser(null);
+    setIsLoggedIn(!!localStorage.getItem("email"));
+
+    if (localStorage.getItem("email")) {
+      setUserDetails({
+        name: localStorage.getItem("name"),
+        email: localStorage.getItem("email"),
+        dob: localStorage.getItem("dob"),
+      });
     }
-  }, [setUser]);
+  }, [location.pathname]);
+
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
 
   return (
-    <div className={`nav-container ${user ? "logged-in" : ""}`}>
+    <div className={`nav-container ${isLoggedIn ? "logged-in" : ""}`}>
       <nav>
         {/* Logo and Title */}
         <div className="logo-container">
           <a href="/">
             <img className="logo" src="/logo.webp" alt="QR Scan Logo" />
           </a>
-          <span className="logo-text">QR Scan</span>
+          <span className="logo-text">ScanMe</span>
         </div>
 
-        {/* Show logout only if user is logged in */}
-        {localStorage.getItem("email") && (
-          <div className="logout-container">
-            <a href="/logout">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-logout"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-                <path d="M9 12h12l-3 -3" />
-                <path d="M18 15l3 -3" />
-              </svg>
-            </a>
+        {/* Show Profile & Logout Icons Only If Logged In */}
+        {isLoggedIn && userDetails && (
+          <div className="icons-container">
+            {/* Profile Icon */}
+            <div className="profile-container">
+              <div className="icon-wrapper" onClick={toggleMenu}>
+                <Person4Icon fontSize="large" className="person" />
+              </div>
+
+              {/* Dropdown Menu */}
+              {showMenu && (
+                <div className="dropdown-menu" ref={menuRef}>
+                  <p className="user-name">{userDetails.name}</p>
+                  <p className="user-email">{userDetails.email}</p>
+                  <p className="user-dob">DOB: {userDetails.dob || "N/A"}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Logout Icon */}
+            <div
+              className="logout-container"
+              onClick={() => navigate("/logout")}
+            >
+              <LogoutIcon fontSize="large" />
+            </div>
           </div>
         )}
       </nav>

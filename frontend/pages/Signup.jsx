@@ -155,26 +155,41 @@ const Signup = () => {
               <div className="third-slide" style={{ display: "none" }}>
                 {userType === "student" && (
                   <>
+                    {/* Branch Selection */}
+
                     <input
                       type="text"
-                      placeholder="Roll No"
                       name="rollNo"
+                      placeholder="Roll No"
                       required
                     />
-                    <input
-                      type="text"
-                      placeholder="Branch"
-                      name="branch"
-                      required
-                    />
+                    <select name="branch" id="branch" required>
+                      <option value="" disabled selected>
+                        Select Branch
+                      </option>
+                      <option value="CSE">CSE</option>
+                      <option value="CSE-AI">CSE-AI</option>
+                      <option value="MECH">MECH</option>
+                      <option value="ECE">ECE</option>
+                      <option value="CSE-DD">CSE-DD</option>
+                    </select>
+
+                    {/* Roll No Input */}
                   </>
                 )}
-                <input
-                  type="text"
-                  placeholder="Department"
-                  name="dept"
-                  required
-                />
+
+                {/* Department Selection */}
+
+                <select name="dept" id="dept" required>
+                  <option value="" disabled selected>
+                    Select Department
+                  </option>
+                  <option value="CSE">CSE</option>
+                  <option value="IT">IT</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Electronics">Electronics</option>
+                </select>
+
                 <input type="date" name="dob" required />
 
                 <button type="button" onClick={toggleFour}>

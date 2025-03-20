@@ -1,7 +1,7 @@
 /* Navbar Styling */
 .nav-container {
   width: 100%;
-  background: #f8f9fa; /* Whitish background with contrast */
+  background: #f8f9fa;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
@@ -10,8 +10,10 @@
   z-index: 100;
   padding: 10px 20px;
 }
-
-/* Align everything in a single row */
+body{
+  padding-top: 60px;
+}
+/* Align items properly */
 nav {
   display: flex;
   justify-content: space-between;
@@ -19,82 +21,93 @@ nav {
   height: 60px;
 }
 
-/* Logo and text styling */
+.logo-text{
+  font-size: 1.6rem;
+  font-family: "Poppins";
+}
+/* Logo container */
 .logo-container {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.logo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
+/* Profile and Logout Icons Container */
+.icons-container {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between icons */
+  padding-right: 20px; /* Ensures icons don’t go off-screen */
 }
 
-.logo-text {
-  font-size: 22px;
-  font-weight: bold;
-  color: #333; /* Dark gray for contrast */
+/* Profile Icon Wrapper */
+.profile-container {
+  position: relative;
   display: flex;
   align-items: center;
 }
-
-/* Logout button styling */
-.logout-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto; /* Pushes logout to the right */
-  padding-right: 20px; /* Ensures spacing from the right edge */
+.icon-wrapper .person{
+  font-size: 2.8rem;
 }
 
-/* SVG Logout Icon */
-.logout-container svg {
-  width: 30px;
-  height: 30px;
-  stroke: black; /* Icon color */
+/* Profile & Logout Icon Styling */
+.icon-wrapper, .logout-container {
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.3s ease-in-out;
 }
 
-/* Add hover effect */
-.logout-container svg:hover {
-  transform: scale(1.1);
+.icon-wrapper:hover, .logout-container:hover {
+  transform: scale(1.2);
 }
 
-/* Hide logout icon by default */
-.logout-container {
-  display: none;
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 200px;
+  z-index: 1000;
 }
 
-/* Show logout button when user is logged in */
-.logged-in .logout-container {
+.dropdown-menu p {
+  margin: 10px 0;
+  cursor: default;
+}
+
+
+
+/* Fix for Logo Image Overflow */
+.logo {
+  width: 50px; /* Set a fixed width */
+  height: 50px; /* Set a fixed height */
+  border-radius: 50%;
+  object-fit: contain; /* Ensures image is fully visible */
+  max-width: 100%; /* Prevents it from exceeding the container */
+}
+
+/* Ensure Navbar Stays Intact */
+.logo-container {
   display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 200px; /* Prevents it from expanding too much */
+  overflow: hidden;
 }
 
-/* Responsive Design */
+/* Responsive Fix for Smaller Screens */
 @media (max-width: 600px) {
-  .nav-container {
-    padding: 10px;
-  }
-
   .logo {
     width: 40px;
     height: 40px;
   }
-
-  .logo-text {
-    font-size: 18px;
-  }
-
-  .logout-container {
-    padding-right: 10px;
-  }
-
-  .logout-container svg {
-    width: 25px;
-    height: 25px;
+  
+  .logo-container {
+    max-width: 150px;
   }
 }
