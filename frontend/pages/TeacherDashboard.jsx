@@ -23,12 +23,19 @@ const TeacherDashboard = () => {
         "http://localhost:5050/sessions/getSessions",
         { token }
       );
-      setSessionList(response.data.sessions);
+  
+      // Ensure response.data.sessions is an array
+      if (Array.isArray(response.data.sessions)) {
+        setSessionList(response.data.sessions);
+      } else {
+        setSessionList([]); // Prevents errors if it's undefined/null
+      }
     } catch (err) {
       console.error(err);
+      setSessionList([]); // Ensures sessionList is always an array, even on error
     }
   };
-
+  
   const toggleSessionDetails = (sessionId) => {
     // Get the session details that has session_id = sessionId
     setCurrentSession(

@@ -45,12 +45,15 @@ const StudentDashboard = () => {
 
   // ✅ Redirect to Login if No Token
   useEffect(() => {
-    if (!token) {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
       navigate("/login");
     } else {
+      setToken(storedToken);  // Update token state
       getStudentCourses();
     }
-  }, [token]);
+  }, []);
+  
 
   return (
     <div className="dashboard-container">
