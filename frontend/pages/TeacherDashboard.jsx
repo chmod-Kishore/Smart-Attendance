@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NewSession from "./NewSession";
-import SessionDetails from "./SessionDetails";
-
-axios.defaults.withCredentials = true;
+import "../styles/TeacherDashboard.css";
 
 const TeacherDashboard = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -15,50 +12,40 @@ const TeacherDashboard = () => {
   const [showLogout, setShowLogout] = useState(false); // ✅ Using state instead of querySelector
   const navigate = useNavigate();
 
-  // Update list of sessions
-  const updateList = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5050/sessions/getSessions",
-        { token }
-      );
-      setSessionList(response.data.sessions);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const toggleSessionDetails = (sessionId) => {
-    // Get the session details that has session_id = sessionId
-    setCurrentSession(
-      sessionList.find((session) => session.session_id === sessionId)
-    );
-    setSessionDisplay(!isSessionDisplay);
-  };
-
-  const togglePopup = () => {
-    setIsOpen(!isOpen);
-  };
-
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    } else {
-      updateList();
-      setShowLogout(true); // ✅ Now using state instead of querySelector
-    }
-  }, [token]);
+    const fetchClasses = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/teacher/classes"
+        );
+        setClasses(res.data);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+    fetchClasses();
+  }, []);
 
-  const FlashCard = ({ session }) => (
-    <div
-      className="flashcard"
-      onClick={() => toggleSessionDetails(session.session_id)}
-    >
-      <div className="front">
-        <h4>{session.name}</h4>
-      </div>
-    </div>
-  );
+  const handleCreateClass = async () => {
+    if (!courseName.trim() || !courseCode.trim()) {
+      return alert("Course Name and Course Code cannot be empty!");
+    }
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/teacher/create-class",
+        {
+          courseName,
+          courseCode,
+        }
+      );
+      setClasses([...classes, res.data]);
+      setCourseName("");
+      setCourseCode("");
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error creating class:", error);
+    }
+  };
 
   return (
     <div className="dashboard-main">
