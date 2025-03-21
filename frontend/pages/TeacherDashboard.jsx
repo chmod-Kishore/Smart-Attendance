@@ -4,19 +4,41 @@ import { useNavigate } from "react-router-dom";
 import "../styles/TeacherDashboard.css";
 
 const TeacherDashboard = () => {
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [sessionList, setSessionList] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSessionDisplay, setSessionDisplay] = useState(false);
-  const [currentSession, setCurrentSession] = useState("");
-  const [showLogout, setShowLogout] = useState(false); // ✅ Using state instead of querySelector
+  const [classes, setClasses] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [courseName, setCourseName] = useState("");
+  const [courseCode, setCourseCode] = useState("");
+  const [invitationCode, setInvitationCode] = useState(""); // ✅ New state for invitationCode
+  const [teacherId, setTeacherId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userEmail = localStorage.getItem("email");
+        if (!userEmail) return;
+
+        const res = await axios.get(
+          `http://localhost:5050/users/user?email=${userEmail}`
+        );
+        if (res.data.user) {
+          localStorage.setItem("id", res.data.user._id);
+          setTeacherId(res.data.user._id);
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  useEffect(() => {
     const fetchClasses = async () => {
+      if (!teacherId) return;
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/teacher/classes"
+          `http://localhost:5050/courses/teacher/${teacherId}/classes`
         );
         setClasses(res.data);
       } catch (error) {
@@ -24,23 +46,29 @@ const TeacherDashboard = () => {
       }
     };
     fetchClasses();
-  }, []);
+  }, [teacherId]);
 
   const handleCreateClass = async () => {
-    if (!courseName.trim() || !courseCode.trim()) {
-      return alert("Course Name and Course Code cannot be empty!");
+    if (!courseName.trim() || !courseCode.trim() || !invitationCode.trim()) {
+      return alert("All fields are required!");
     }
+    if (!teacherId) return alert("Teacher ID not found!");
+
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/teacher/create-class",
+        "http://localhost:5050/courses/create-class",
         {
+          teacherId,
           courseName,
           courseCode,
+          invitationCode, // ✅ Sending invitationCode in the request
         }
       );
-      setClasses([...classes, res.data]);
+
+      setClasses((prevClasses) => [...prevClasses, res.data]);
       setCourseName("");
       setCourseCode("");
+      setInvitationCode(""); // ✅ Reset after submission
       setShowModal(false);
     } catch (error) {
       console.error("Error creating class:", error);
@@ -48,45 +76,61 @@ const TeacherDashboard = () => {
   };
 
   return (
-    <div className="dashboard-main">
-      <div className="row1">
-        <div className="heading">
-          <h2>Your Sessions</h2>
+    <div className="dashboard-container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <h2>ScanMe</h2>
+        <button onClick={() => setShowModal(true)}>+ Create Class</button>
+      </aside>
+
+      {/* Main Content */}
+      <main className="dashboard-content">
+        <h1>Your Classes</h1>
+        <div className="class-grid">
+          {classes.length > 0 ? (
+            classes.map((classItem) => (
+              <div
+                key={classItem._id}
+                className="class-card"
+                onClick={() => navigate(`/teacher/class/${classItem._id}`)}
+              >
+                <h3>{classItem.courseName}</h3>
+                <p>Code: {classItem.courseCode}</p>
+              </div>
+            ))
+          ) : (
+            <p>No classes created yet.</p>
+          )}
         </div>
-        <div className="createbtncol">
-          <button onClick={togglePopup} className="createbtn">
-            Create Session
-          </button>
-        </div>
-      </div>
+      </main>
 
-      {/* ✅ Conditionally show Logout Button */}
-      {showLogout && <button className="logout">Logout</button>}
-
-      <div className="session-list">
-        {sessionList.length > 0 ? (
-          sessionList.map((session, index) => (
-            <div key={index + session.session_id} className="flashcard">
-              <FlashCard session={session} />
-            </div>
-          ))
-        ) : (
-          <p>No sessions found</p>
-        )}
-      </div>
-
-      {isSessionDisplay && (
-        <div className="popup-overlay">
-          <SessionDetails
-            currentSession={currentSession}
-            toggleSessionDetails={toggleSessionDetails}
-          />
-        </div>
-      )}
-
-      {isOpen && (
-        <div className="popup-overlay">
-          <NewSession togglePopup={togglePopup} />
+      {/* Modal for Class Creation */}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Create New Class</h2>
+            <input
+              type="text"
+              placeholder="Enter Course Name"
+              value={courseName}
+              onChange={(e) => setCourseName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Enter Course Code"
+              value={courseCode}
+              onChange={(e) => setCourseCode(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Enter Invitation Code"
+              value={invitationCode}
+              onChange={(e) => setInvitationCode(e.target.value)}
+            />{" "}
+            {/* ✅ New input field */}
+            <button onClick={handleCreateClass}>Create</button>
+            <button onClick={() => setShowModal(false)}>Cancel</button>
+          </div>
         </div>
       )}
     </div>

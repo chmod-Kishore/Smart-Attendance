@@ -4,14 +4,19 @@ import { Student } from "../model/Student.js";
 // 🟢 Create a New Class
 export const createClass = async (req, res) => {
   try {
-    const { teacherId, courseName, courseCode } = req.body;
+    const { teacherId, courseName, courseCode, invitationCode } = req.body;
 
     if (!teacherId || !courseName || !courseCode) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
     // ✅ Create and Save New Course (invitationCode auto-generated)
-    const newCourse = new Course({ teacherId, courseName, courseCode });
+    const newCourse = new Course({
+      teacherId,
+      courseName,
+      courseCode,
+      invitationCode,
+    });
     await newCourse.save();
 
     res.status(201).json(newCourse);
@@ -40,7 +45,9 @@ export const joinClass = async (req, res) => {
     const { studentId, invitationCode } = req.body;
 
     if (!studentId || !invitationCode) {
-      return res.status(400).json({ error: "Student ID and Invitation Code required" });
+      return res
+        .status(400)
+        .json({ error: "Student ID and Invitation Code required" });
     }
 
     // ✅ Find Course by Invitation Code
@@ -59,7 +66,9 @@ export const joinClass = async (req, res) => {
     foundCourse.students.push(studentId);
     await foundCourse.save();
 
-    res.status(200).json({ message: "Successfully joined the class", course: foundCourse });
+    res
+      .status(200)
+      .json({ message: "Successfully joined the class", course: foundCourse });
   } catch (error) {
     res.status(500).json({ error: "Error joining class" });
   }
@@ -71,7 +80,10 @@ export const getClassStudents = async (req, res) => {
     const { courseId } = req.params;
 
     // ✅ Find Course and Populate Student List
-    const course = await Course.findById(courseId).populate("students", "name email");
+    const course = await Course.findById(courseId).populate(
+      "students",
+      "name email"
+    );
 
     if (!course) {
       return res.status(404).json({ error: "Course not found" });

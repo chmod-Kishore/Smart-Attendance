@@ -9,7 +9,6 @@ import userRoutes from "./routes/userRoutes.js";
 import SessionRoutes from "./routes/SessionRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 
-
 // Initialize the app
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -43,7 +42,7 @@ mongoose
 // Routes
 app.use("/users", userRoutes);
 app.use("/sessions", SessionRoutes);
-app.use("/courses",courseRoutes);
+app.use("/courses", courseRoutes);
 
 // Start the server
 app.listen(PORT, () => {

@@ -18,7 +18,6 @@ router.post("/forgotpassword", UserController.ForgotPassword);
 // send mail
 router.post("/sendmail", UserController.SendMail);
 
-router.get("/user/:email", UserController.GetUserDetails);
-
+router.get("/user", UserController.GetUserDetails);
 
 export default router;
