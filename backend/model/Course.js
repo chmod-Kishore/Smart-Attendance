@@ -3,14 +3,21 @@ import mongoose, { model, Schema } from "mongoose";
 const courseSchema = new Schema(
   {
     teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
-    courseCode: { type: String, required: true, unique: true, index: true },
-    courseName: { type: String, required: true, unique: true },
-    invitationCode: { type: String, required: true, unique: true }, // ✅ Unique Code for Joining
-    students: [{ type: Schema.Types.ObjectId, ref: "Student" }], // ✅ Enrolled students
-    sessions: [{ type: Schema.Types.ObjectId, ref: "Session" }], // ✅ Sessions list
+    courseCode: { type: String, required: true ,unique:true},
+    courseName: { type: String, required: true ,unique:true},
+    invitationCode: { type: String, required: true },
+    students: [{ type: Schema.Types.ObjectId, ref: "Student" }],
+    sessions: [{ type: Schema.Types.ObjectId, ref: "Session" }],
   },
   { timestamps: true }
 );
+
+// ✅ Ensure Course Name & Code are Unique for Each Teacher
+//courseSchema.index({ teacherId: 1, courseCode: 1 }, { unique: true });
+//courseSchema.index({ teacherId: 1, courseName: 1 }, { unique: true });
+
+export const Course = model("Course", courseSchema);
+
 
 // // ✅ Function to Generate Unique Invitation Code
 // courseSchema.pre("save", async function (next) {
@@ -30,4 +37,7 @@ const courseSchema = new Schema(
 //   return code;
 // }
 
-export const Course = model("Course", courseSchema);
+//courseSchema.index({ teacherId: 1, courseCode: 1 }, { unique: true }); // Ensures courseCode is unique per teacher
+//courseSchema.index({ teacherId: 1, courseName: 1 }, { unique: true }); // Ensures courseName is unique per teacher
+
+//export const Course = model("Course", courseSchema);

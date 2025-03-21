@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/TeacherDashboard.css";
+import { clientServer } from "../src/config";
 
 const TeacherDashboard = () => {
   const [classes, setClasses] = useState([]);
@@ -31,14 +32,14 @@ const TeacherDashboard = () => {
     };
 
     fetchUserDetails();
-  }, []);
+  }, [teacherId]);
 
   useEffect(() => {
     const fetchClasses = async () => {
       if (!teacherId) return;
       try {
-        const res = await axios.get(
-          `http://localhost:5050/courses/teacher/${teacherId}/classes`
+        const res = await clientServer.get(
+          `/courses/teacher/${teacherId}/classes`
         );
         setClasses(res.data);
       } catch (error) {
@@ -46,7 +47,7 @@ const TeacherDashboard = () => {
       }
     };
     fetchClasses();
-  }, [teacherId]);
+  }, [teacherId,classes]);
 
   const handleCreateClass = async () => {
     if (!courseName.trim() || !courseCode.trim() || !invitationCode.trim()) {
