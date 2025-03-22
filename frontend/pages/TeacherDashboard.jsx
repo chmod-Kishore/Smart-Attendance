@@ -186,7 +186,7 @@ const TeacherDashboard = () => {
     };
 
     fetchUserDetails();
-  }, [teacherId]);
+  }, [teacherId, classes]);
 
   useEffect(() => {
     const fetchClasses = async () => {

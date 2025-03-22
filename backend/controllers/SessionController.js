@@ -221,7 +221,8 @@ export const createSession = async (req, res) => {
     });
 
     await session.save();
-
+    course.sessions.push(session._id);
+    await course.save();
     res.status(201).json({
       message: "Session created successfully!",
       sessionId: session._id,
