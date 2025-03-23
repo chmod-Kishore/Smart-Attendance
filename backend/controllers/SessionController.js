@@ -197,7 +197,7 @@ export const createSession = async (req, res) => {
       return res.status(400).json({ error: "All fields are required!" });
     }
 
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate("students");
     if (!course) {
       return res.status(404).json({ error: "Course not found!" });
     }
@@ -209,6 +209,12 @@ export const createSession = async (req, res) => {
     // Calculate session expiration time
     const expiresAt = new Date(Date.now() + duration * 60000);
 
+    // ✅ Prepopulate attendance with all students as "Absent"
+    const initialAttendance = course.students.map((student) => ({
+      studentId: student._id,
+      status: "Absent",
+    }));
+
     // Create session entry in DB
     const session = new Session({
       courseId,
@@ -218,15 +224,18 @@ export const createSession = async (req, res) => {
       radius,
       currentQRCode: qrCodeUrl,
       lastQRUpdatedAt: Date.now(),
+      attendance: initialAttendance, // ✅ Adding all students with "Absent"
     });
 
     await session.save();
+
+    // ✅ Add session ID to the respective class
     course.sessions.push(session._id);
     await course.save();
-    res.status(201).json({
+
+    return res.json({
       message: "Session created successfully!",
       sessionId: session._id,
-      qrCode: qrCodeUrl,
     });
   } catch (error) {
     console.error("Error creating session:", error);
@@ -276,9 +285,12 @@ const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
 // ✅ Mark Attendance with Radius and Expiry Check
 export const markAttendance = async (req, res) => {
   try {
-    const { studentId, sessionId, latitude, longitude, timestamp } = req.body;
+    console.log("Received markAttendance request:", req.body); // ✅ Debugging log
 
-    if (!studentId || !sessionId || !latitude || !longitude || !timestamp) {
+    const { studentId, sessionId, latitude, longitude, scannedQRData } =
+      req.body;
+
+    if (!studentId || !sessionId || !latitude || !longitude || !scannedQRData) {
       return res.status(400).json({ error: "All fields are required!" });
     }
 
@@ -287,17 +299,23 @@ export const markAttendance = async (req, res) => {
       return res.status(404).json({ error: "Session not found!" });
     }
 
-    // ✅ Check if session is still active
-    const sessionEndTime = new Date(session.expiresAt);
-    const scanTime = new Date(timestamp);
-
-    if (scanTime > sessionEndTime) {
-      return res
-        .status(400)
-        .json({ error: "Session expired, attendance not recorded!" });
+    let qrData;
+    try {
+      qrData = JSON.parse(scannedQRData);
+      console.log("Parsed QR Data:", qrData); // ✅ Debugging log
+    } catch (error) {
+      return res.status(400).json({ error: "Invalid QR Code!" });
     }
 
-    // ✅ Validate student location within the session radius
+    if (qrData.sessionId !== session._id.toString()) {
+      return res.status(400).json({ error: "Invalid QR Code!" });
+    }
+
+    const qrAge = Date.now() - qrData.timestamp;
+    if (qrAge > 20000) {
+      return res.status(400).json({ error: "Outdated QR Code!" });
+    }
+
     const distance = getDistanceFromLatLonInMeters(
       session.location.latitude,
       session.location.longitude,
@@ -313,21 +331,25 @@ export const markAttendance = async (req, res) => {
       });
     }
 
-    // ✅ Check if student is already marked as present
+    // ✅ Find the student's attendance record
     const existingAttendance = session.attendance.find(
       (record) => record.studentId.toString() === studentId
     );
-    if (existingAttendance && existingAttendance.status === "Present") {
-      return res.status(400).json({ error: "Attendance already marked!" });
-    }
 
-    // ✅ Mark attendance
-    session.attendance.push({
-      studentId,
-      status: "Present",
-      scannedAt: scanTime,
-      scanLocation: { latitude, longitude },
-    });
+    if (existingAttendance) {
+      if (existingAttendance.status === "Present") {
+        return res.status(400).json({ error: "Attendance already marked!" });
+      }
+
+      // ✅ Update existing record from "Absent" to "Present"
+      existingAttendance.status = "Present";
+      existingAttendance.scannedAt = new Date();
+      existingAttendance.scanLocation = { latitude, longitude };
+    } else {
+      return res
+        .status(400)
+        .json({ error: "Student is not part of this session!" });
+    }
 
     await session.save();
 
@@ -337,6 +359,7 @@ export const markAttendance = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 export const joinSession = async (req, res) => {
   try {
     const { studentId, sessionId } = req.body;

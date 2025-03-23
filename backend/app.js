@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
     updatedSessions.forEach(({ sessionId, newQRCode }) => {
       io.to(sessionId.toString()).emit("qrUpdate", newQRCode);
     });
-  }, 10000);
+  }, 40000);
 });
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

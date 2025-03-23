@@ -7,22 +7,20 @@ export default function QRScanner({ sessionId, studentId }) {
 
   const handleScan = async (data) => {
     if (data?.text) {
-      try {
-        const parsedData = JSON.parse(data.text);
-        if (!parsedData.sessionId || !parsedData.timestamp) {
-          setResult("Invalid QR Code");
-          return;
-        }
+      console.log("Scanned QR Code Data:", data.text); // ✅ Debugging log
 
+      try {
         const position = await getUserLocation();
+
+        // ✅ Send full scannedQRData as received from scanner
         const res = await axios.post(
           "http://localhost:5050/sessions/mark-attendance",
           {
-            sessionId: parsedData.sessionId,
+            studentId,
+            sessionId,
             latitude: position.latitude,
             longitude: position.longitude,
-            timestamp: parsedData.timestamp,
-            studentId,
+            scannedQRData: data.text, // ✅ Send full scanned data
           }
         );
 
@@ -39,7 +37,7 @@ export default function QRScanner({ sessionId, studentId }) {
       <QrReader
         delay={300}
         onResult={handleScan}
-        constraints={{ facingMode: "environment" }}
+        constraints={{ facingMode: { ideal: "environment" } }} // ✅ Opens back camera
         style={{ width: "100%" }}
       />
       <p>{result}</p>
