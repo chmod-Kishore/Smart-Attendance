@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5050", {
+const socket = io("https://scanme-wkq3.onrender.com", {
   reconnectionAttempts: 5, // ✅ Retry if disconnected
   reconnectionDelay: 2000, // ✅ Wait 2s before retrying
 });

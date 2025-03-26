@@ -29,7 +29,7 @@ const ForgotPassword = () => {
       document.querySelector(".page1").style.display = "none";
       document.querySelector(".page2").style.display = "block";
       await axios
-        .post("http://localhost:5050/users/sendmail", {
+        .post("https://scanme-wkq3.onrender.com/users/sendmail", {
           email: email,
         })
         .then((res) => {

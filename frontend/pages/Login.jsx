@@ -19,11 +19,12 @@ const Login = () => {
     let password = e.target.password.value; // Send raw password
 
     if (email && password) {
-      const formData = { email, password }; // No hashing
-
+      password = computeHash(password);
+      password = computeHash(email + password);
+      const formData = { email, password };
       try {
         const response = await axios.post(
-          "http://localhost:5050/users/signin",
+          "https://scanme-wkq3.onrender.com/users/signin",
           formData
         );
         const { user, type, token } = response.data;
