@@ -5,11 +5,11 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon apps.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "keywords": [],
-  "author": "Rohit,Jovan and kishore",
+  "author": "Rohit, Jovan and Kishore",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.8",

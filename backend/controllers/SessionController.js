@@ -312,7 +312,7 @@ export const markAttendance = async (req, res) => {
     }
 
     const qrAge = Date.now() - qrData.timestamp;
-    if (qrAge > 20000) {
+    if (qrAge > 40000) {
       return res.status(400).json({ error: "Outdated QR Code!" });
     }
 
