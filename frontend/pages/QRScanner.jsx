@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QrScanner from "react-qr-scanner";
-
 import axios from "axios";
 
 export default function QRScanner({ sessionId, studentId }) {
   const [result, setResult] = useState("");
+  const [hasPermission, setHasPermission] = useState(null);
+  const [facingMode, setFacingMode] = useState("environment"); // Default to back camera
+
+  useEffect(() => {
+    // Request camera access
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then(() => setHasPermission(true))
+      .catch(() => setHasPermission(false));
+  }, []);
 
   const handleScan = async (data) => {
     if (data) {
@@ -13,7 +22,6 @@ export default function QRScanner({ sessionId, studentId }) {
       try {
         const position = await getUserLocation();
 
-        // ✅ Send full scannedQRData as received from scanner
         const res = await axios.post(
           "https://scanme-wkq3.onrender.com/sessions/mark-attendance",
           {
@@ -33,15 +41,32 @@ export default function QRScanner({ sessionId, studentId }) {
     }
   };
 
+  if (hasPermission === false) {
+    return <p>Camera access denied. Please allow camera permissions.</p>;
+  }
+
   return (
     <div>
-      <QrScanner
-        delay={300}
-        onScan={handleScan} // ✅ Correct function name
-        onError={(err) => console.error("QR Scan Error:", err)}
-        constraints={{ facingMode: "environment" }} // ✅ Opens back camera
-        style={{ width: "100%" }}
-      />
+      <button
+        onClick={() =>
+          setFacingMode(facingMode === "environment" ? "user" : "environment")
+        }
+      >
+        Switch Camera
+      </button>
+
+      {hasPermission === true ? (
+        <QrScanner
+          delay={300}
+          onScan={handleScan}
+          onError={(err) => console.error("QR Scan Error:", err)}
+          constraints={{ facingMode }} // ✅ Switch between front and back
+          style={{ width: "100%" }}
+        />
+      ) : (
+        <p>Requesting camera access...</p>
+      )}
+
       <p>{result}</p>
     </div>
   );
