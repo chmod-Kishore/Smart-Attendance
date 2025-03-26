@@ -1,5 +1,6 @@
 import { useState } from "react";
 import QrScanner from "react-qr-scanner";
+
 import axios from "axios";
 
 export default function QRScanner({ sessionId, studentId }) {
