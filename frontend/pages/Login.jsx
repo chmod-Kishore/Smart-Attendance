@@ -14,10 +14,6 @@ const Login = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const navigate = useNavigate();
 
-  function computeHash(input) {
-    return SHA256(input).toString();
-  }
-
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     let email = e.target.email.value;
