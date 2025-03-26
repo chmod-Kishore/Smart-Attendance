@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { QrReader } from "react-qr-reader";
+import QrScanner from "react-qr-scanner";
 import axios from "axios";
 
 export default function QRScanner({ sessionId, studentId }) {
   const [result, setResult] = useState("");
 
   const handleScan = async (data) => {
-    if (data?.text) {
-      console.log("Scanned QR Code Data:", data.text); // ✅ Debugging log
+    if (data) {
+      console.log("Scanned QR Code Data:", data); // ✅ Debugging log
 
       try {
         const position = await getUserLocation();
@@ -20,7 +20,7 @@ export default function QRScanner({ sessionId, studentId }) {
             sessionId,
             latitude: position.latitude,
             longitude: position.longitude,
-            scannedQRData: data.text, // ✅ Send full scanned data
+            scannedQRData: data, // ✅ Send full scanned data
           }
         );
 
@@ -34,10 +34,11 @@ export default function QRScanner({ sessionId, studentId }) {
 
   return (
     <div>
-      <QrReader
+      <QrScanner
         delay={300}
-        onResult={handleScan}
-        constraints={{ facingMode: { ideal: "environment" } }} // ✅ Opens back camera
+        onScan={handleScan} // ✅ Correct function name
+        onError={(err) => console.error("QR Scan Error:", err)}
+        constraints={{ facingMode: "environment" }} // ✅ Opens back camera
         style={{ width: "100%" }}
       />
       <p>{result}</p>
