@@ -19,7 +19,12 @@ const io = new Server(server, { cors: { origin: "*" } });
 const PORT = process.env.PORT || 5050;
 const MONGODB_URI = process.env.MONGODB;
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+const allowedOrigins = [
+  "http://localhost:5173", // Dev environment
+  "https://qrcheck-htnc.onrender.com", // Your deployed frontend
+];
+
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.static("public"));
