@@ -19,8 +19,6 @@ const Login = () => {
     let password = e.target.password.value; // Send raw password
 
     if (email && password) {
-      password = computeHash(password);
-      password = computeHash(email + password);
       const formData = { email, password };
       try {
         const response = await axios.post(
