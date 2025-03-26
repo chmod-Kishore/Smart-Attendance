@@ -31,6 +31,11 @@ mongoose
   .catch((err) => console.log(err));
 
 // Routes
+
+app.get("/", (req, res) => {
+  res.send("Server is running...");
+});
+
 app.use("/users", userRoutes);
 app.use("/sessions", SessionRoutes);
 app.use("/courses", courseRoutes);

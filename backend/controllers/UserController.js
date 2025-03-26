@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 import { Student } from "../model/Student.js";
 import { Teacher } from "../model/Teacher.js";
 import JWT from "../middleware/JWT.js";
-
+import bcrypt from "bcrypt";
 //login
 // async function Login(req, res) {
 //   const { email, password } = req.body;
@@ -43,7 +43,7 @@ import JWT from "../middleware/JWT.js";
 async function Login(req, res) {
   const { email, password } = req.body;
   let type = "student";
-  //check if user is a student
+
   let user = await Student.findOne({ email });
   if (!user) {
     type = "teacher";
@@ -51,13 +51,16 @@ async function Login(req, res) {
   }
 
   if (user) {
-    if (user.password === password) {
+    const isMatch = await bcrypt.compare(password, user.password); // ✅ Correct way to check passwords
+
+    if (isMatch) {
       const token = JWT.generateToken({ email: user.email });
       user.type = type;
       res
         .cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
+          sameSite: "None",
         })
         .status(200)
         .json({ user: user, type: type, token: token });
@@ -73,6 +76,8 @@ async function Signup(req, res) {
   const { name, email, rollNo, dob, branch, dept, password, type } = req.body;
 
   try {
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash password
+
     if (type === "student") {
       const existingUser = await Student.findOne({ email }).exec();
       if (existingUser) {
@@ -88,7 +93,7 @@ async function Signup(req, res) {
         dob,
         branch,
         dept,
-        password,
+        password: hashedPassword, // Store hashed password
       });
 
       await newUser.save();
@@ -108,7 +113,7 @@ async function Signup(req, res) {
         email,
         dob,
         dept,
-        password,
+        password: hashedPassword, // Store hashed password
       });
 
       await newUser.save();
