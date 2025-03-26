@@ -16,10 +16,6 @@ const Signup = () => {
   const [userType, setUserType] = useState("student");
   const navigate = useNavigate();
 
-  function computeHash(input) {
-    return SHA256(input).toString();
-  }
-
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     let name = e.target.name.value;
@@ -35,9 +31,6 @@ const Signup = () => {
 
     if (password.length > 0 && confirmPassword.length > 0) {
       if (password === confirmPassword) {
-        password = computeHash(password);
-        password = computeHash(email + password);
-
         const formData = {
           name,
           email,
