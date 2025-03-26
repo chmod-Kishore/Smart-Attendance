@@ -4,42 +4,8 @@ import nodemailer from "nodemailer";
 import { Student } from "../model/Student.js";
 import { Teacher } from "../model/Teacher.js";
 import JWT from "../middleware/JWT.js";
-import bcrypt from "bcrypt";
-//login
-// async function Login(req, res) {
-//   const { email, password } = req.body;
-//   let type = "student";
-//   let user = await Student.findOne({ email });
+import bcrypt, { hash } from "bcryptjs";
 
-//   if (!user) {
-//     type = "teacher";
-//     user = await Teacher.findOne({ email });
-//   }
-
-//   if (user) {
-//     if (user.password === password) {
-//       const token = JWT.generateToken({ email: user.email });
-
-//       res
-//         .cookie("token", token, {
-//           httpOnly: true,
-//           secure: process.env.NODE_ENV === "production",
-//         })
-//         .status(200)
-//         .json({
-//           message: "Login successful",
-//           user: { ...user.toObject(), type }, // ✅ Ensures _id is included
-//           token: token,
-//         });
-//     } else {
-//       res
-//         .status(400)
-//         .json({ message: "Incorrect password. Please try again." });
-//     }
-//   } else {
-//     res.status(404).json({ message: "User not found. Please sign up." });
-//   }
-// }
 async function Login(req, res) {
   const { email, password } = req.body;
   let type = "student";
@@ -51,7 +17,7 @@ async function Login(req, res) {
   }
 
   if (user) {
-    const isMatch = await bcrypt.compare(password, user.password); // ✅ Correct way to check passwords
+    const isMatch = await bcrypt.compare(password.toString(), user.password);
 
     if (isMatch) {
       const token = JWT.generateToken({ email: user.email });
@@ -71,6 +37,7 @@ async function Login(req, res) {
     res.status(400).json({ message: "No such User" });
   }
 }
+
 // Create a new user
 async function Signup(req, res) {
   const { name, email, rollNo, dob, branch, dept, password, type } = req.body;
