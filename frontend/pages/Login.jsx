@@ -23,7 +23,7 @@ const Login = () => {
       const formData = { email, password };
       try {
         const response = await axios.post(
-          "http://localhost:5050/users/signin",
+          "https://scanme-wkq3.onrender.com/users/signin",
           formData
         );
         const { user, type, token } = response.data;

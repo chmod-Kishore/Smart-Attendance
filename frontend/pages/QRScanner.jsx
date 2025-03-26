@@ -14,7 +14,7 @@ export default function QRScanner({ sessionId, studentId }) {
 
         // ✅ Send full scannedQRData as received from scanner
         const res = await axios.post(
-          "http://localhost:5050/sessions/mark-attendance",
+          "https://scanme-wkq3.onrender.com/sessions/mark-attendance",
           {
             studentId,
             sessionId,

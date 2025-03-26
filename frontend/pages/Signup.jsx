@@ -42,7 +42,10 @@ const Signup = () => {
         };
 
         try {
-          await axios.post("http://localhost:5050/users/signup", formData);
+          await axios.post(
+            "https://scanme-wkq3.onrender.com/users/signup",
+            formData
+          );
           navigate("/login");
         } catch (err) {
           console.log(err);
@@ -68,9 +71,12 @@ const Signup = () => {
     document.querySelector(".second-slide").style.display = "block";
 
     try {
-      const res = await axios.post("http://localhost:5050/users/sendmail", {
-        email,
-      });
+      const res = await axios.post(
+        "https://scanme-wkq3.onrender.com/users/sendmail",
+        {
+          email,
+        }
+      );
       setOtp(res.data.otp);
     } catch (err) {
       console.log(err);
