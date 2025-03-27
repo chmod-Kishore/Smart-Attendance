@@ -39,7 +39,7 @@ export const createClass = async (req, res) => {
     await newCourse.save();
     // const teacher=await Teacher.findById({teacherId});
     teacher.courses.push(newCourse._id);
-    await teacher.save()
+    await teacher.save();
 
     res.status(201).json({ message: "Class created successfully", newCourse });
   } catch (error) {
@@ -47,7 +47,6 @@ export const createClass = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 // 🟢 Get All Classes for a Teacher
 export const getTeacherClasses = async (req, res) => {
@@ -66,16 +65,16 @@ export const getTeacherClasses = async (req, res) => {
 // 🟢 Student Joins Class Using Invitation Code
 export const joinClass = async (req, res) => {
   try {
-    const { studentId, invitationCode } = req.body;
+    const { courseName, studentId, invitationCode } = req.body;
 
-    if (!studentId || !invitationCode) {
+    if (!studentId || !invitationCode || !courseName) {
       return res
         .status(400)
         .json({ error: "Student ID and Invitation Code required" });
     }
 
     // ✅ Find Course by Invitation Code
-    const foundCourse = await Course.findOne({ invitationCode });
+    const foundCourse = await Course.findOne({ courseName });
 
     if (!foundCourse) {
       return res.status(404).json({ error: "Invalid invitation code" });
@@ -151,8 +150,8 @@ export const getCourseDetails = async (req, res) => {
     // Find course and populate teacher & students
     const course = await Course.findById(id)
       .populate("teacherId", "name email") // Get teacher's name & email
-      .populate("students", "name email rollNo dept branch") // Get student details
-      //.populate("sessions"); // Get sessions if needed
+      .populate("students", "name email rollNo dept branch"); // Get student details
+    //.populate("sessions"); // Get sessions if needed
 
     if (!course) {
       return res.status(404).json({ error: "Course not found" });
@@ -164,5 +163,3 @@ export const getCourseDetails = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
