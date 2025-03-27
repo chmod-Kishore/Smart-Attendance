@@ -1,37 +1,45 @@
-import { useState, useEffect } from "react";
-import QrScanner from "react-qr-scanner";
+import { useEffect, useState } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import axios from "axios";
 
 export default function QRScanner({ sessionId, studentId }) {
   const [result, setResult] = useState("");
   const [hasPermission, setHasPermission] = useState(null);
   const [facingMode, setFacingMode] = useState("environment");
-  const [videoDeviceId, setVideoDeviceId] = useState(null);
 
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({ video: true })
-      .then(() => {
-        setHasPermission(true);
-        getBackCamera();
-      })
+      .then(() => setHasPermission(true))
       .catch(() => setHasPermission(false));
   }, []);
 
-  const getBackCamera = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const backCamera = devices.find(
-      (device) =>
-        device.kind === "videoinput" &&
-        device.label.toLowerCase().includes("back")
+  useEffect(() => {
+    if (!hasPermission) return;
+
+    const scanner = new Html5QrcodeScanner("qr-reader", {
+      fps: 10,
+      qrbox: { width: 250, height: 250 },
+      facingMode,
+    });
+
+    scanner.render(
+      async (decodedText) => {
+        scanner.clear();
+        handleScan(decodedText);
+      },
+      (errorMessage) => {
+        console.error("QR Scan Error:", errorMessage);
+      }
     );
-    setVideoDeviceId(backCamera ? backCamera.deviceId : null);
-  };
+
+    return () => scanner.clear();
+  }, [hasPermission, facingMode]);
 
   const handleScan = async (data) => {
     if (!data) return;
 
-    console.log("Scanned QR Code Data:", data);
+    console.log("Scanned QR Code Data:", data); // ✅ `data` is already a string
 
     try {
       const position = await getUserLocation();
@@ -42,7 +50,7 @@ export default function QRScanner({ sessionId, studentId }) {
           sessionId,
           latitude: position.latitude,
           longitude: position.longitude,
-          scannedQRData: data.text,
+          scannedQRData: data, // ✅ Corrected here
         }
       );
 
@@ -53,45 +61,16 @@ export default function QRScanner({ sessionId, studentId }) {
     }
   };
 
-  const switchCamera = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cameras = devices.filter((device) => device.kind === "videoinput");
-
-    if (cameras.length > 1) {
-      const newDevice =
-        facingMode === "environment"
-          ? cameras.find((device) =>
-              device.label.toLowerCase().includes("front")
-            )
-          : cameras.find((device) =>
-              device.label.toLowerCase().includes("back")
-            );
-
-      setVideoDeviceId(newDevice ? newDevice.deviceId : null);
-      setFacingMode(facingMode === "environment" ? "user" : "environment");
-    }
-  };
-
   return (
     <div>
-      <button onClick={switchCamera}>Switch Camera</button>
-
-      {hasPermission === true ? (
-        <QrScanner
-          delay={300}
-          onScan={handleScan}
-          onError={(err) => console.error("QR Scan Error:", err)}
-          constraints={{
-            video: {
-              deviceId: videoDeviceId ? { exact: videoDeviceId } : undefined,
-            },
-          }}
-          style={{ width: "100%" }}
-        />
-      ) : (
-        <p>Requesting camera access...</p>
-      )}
-
+      <button
+        onClick={() =>
+          setFacingMode(facingMode === "environment" ? "user" : "environment")
+        }
+      >
+        Switch Camera
+      </button>
+      <div id="qr-reader"></div>
       <p>{result}</p>
     </div>
   );
