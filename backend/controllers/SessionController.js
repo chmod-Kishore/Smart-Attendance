@@ -197,20 +197,6 @@ export const joinSession = async (req, res) => {
       return res.status(400).json({ error: "Session has expired!" });
     }
 
-    // Check if student is already in attendance list
-    const existingEntry = session.attendance.find(
-      (entry) => entry.studentId.toString() === studentId
-    );
-    if (!existingEntry) {
-      session.attendance.push({
-        studentId,
-        status: "Absent",
-        scannedAt: null,
-        scanLocation: null,
-      });
-      await session.save();
-    }
-
     return res.json({ qrCode: session.currentQRCode });
   } catch (error) {
     console.error("Error joining session:", error);
