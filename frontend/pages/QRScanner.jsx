@@ -42,7 +42,7 @@ export default function QRScanner({ sessionId, studentId }) {
           sessionId,
           latitude: position.latitude,
           longitude: position.longitude,
-          scannedQRData: data,
+          scannedQRData: data.text,
         }
       );
 

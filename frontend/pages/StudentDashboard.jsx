@@ -118,16 +118,6 @@ const StudentDashboard = () => {
         </div>
       )}
 
-      {/* QR Code Display */}
-      {qrCode && (
-        <div className="qr-modal">
-          <div className="modal-content">
-            <h2>Session QR Code</h2>
-            <img src={qrCode} alt="Session QR Code" />
-          </div>
-        </div>
-      )}
-
       {/* QR Scanner for Attendance */}
       {showQRScanner && (
         <QRScanner sessionId={sessionId} studentId={studentId} />
