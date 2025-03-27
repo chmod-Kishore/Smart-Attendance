@@ -6,20 +6,18 @@ export default function QRScanner({ sessionId, studentId }) {
   const [result, setResult] = useState("");
   const [hasPermission, setHasPermission] = useState(null);
   const [facingMode, setFacingMode] = useState("environment");
-  const [videoDeviceId, setVideoDeviceId] = useState(null); // Store camera device ID
+  const [videoDeviceId, setVideoDeviceId] = useState(null);
 
   useEffect(() => {
-    // Request camera access and get available devices
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then(() => {
         setHasPermission(true);
-        getBackCamera(); // Set default to back camera
+        getBackCamera();
       })
       .catch(() => setHasPermission(false));
   }, []);
 
-  // Get available video devices and set the back camera
   const getBackCamera = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const backCamera = devices.find(
@@ -30,40 +28,36 @@ export default function QRScanner({ sessionId, studentId }) {
     setVideoDeviceId(backCamera ? backCamera.deviceId : null);
   };
 
-  // Handle QR Code Scan
   const handleScan = async (data) => {
-    if (data) {
-      console.log("Scanned QR Code Data:", data);
+    if (!data) return;
 
-      try {
-        const position = await getUserLocation();
+    console.log("Scanned QR Code Data:", data);
 
-        const res = await axios.post(
-          "https://scanme-wkq3.onrender.com/sessions/mark-attendance",
-          {
-            studentId,
-            sessionId,
-            latitude: position.latitude,
-            longitude: position.longitude,
-            scannedQRData: data,
-          }
-        );
+    try {
+      const position = await getUserLocation();
+      const res = await axios.post(
+        "https://scanme-wkq3.onrender.com/sessions/mark-attendance",
+        {
+          studentId,
+          sessionId,
+          latitude: position.latitude,
+          longitude: position.longitude,
+          scannedQRData: data,
+        }
+      );
 
-        setResult(res.data.message);
-      } catch (error) {
-        console.error("Error processing QR Code:", error);
-        setResult(error.response?.data?.error || "Failed to mark attendance");
-      }
+      setResult(res.data.message);
+    } catch (error) {
+      console.error("Error processing QR Code:", error);
+      setResult(error.response?.data?.error || "Failed to mark attendance");
     }
   };
 
-  // Handle Camera Switching
   const switchCamera = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const cameras = devices.filter((device) => device.kind === "videoinput");
 
     if (cameras.length > 1) {
-      // Toggle between front and back camera
       const newDevice =
         facingMode === "environment"
           ? cameras.find((device) =>
@@ -77,10 +71,6 @@ export default function QRScanner({ sessionId, studentId }) {
       setFacingMode(facingMode === "environment" ? "user" : "environment");
     }
   };
-
-  if (hasPermission === false) {
-    return <p>Camera access denied. Please allow camera permissions.</p>;
-  }
 
   return (
     <div>
@@ -107,7 +97,7 @@ export default function QRScanner({ sessionId, studentId }) {
   );
 }
 
-// ✅ Get User Location with Error Handling
+// Get user location
 async function getUserLocation() {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
