@@ -179,27 +179,4 @@ export const markAttendance = async (req, res) => {
   }
 };
 
-export const joinSession = async (req, res) => {
-  try {
-    const { studentId, sessionId } = req.body;
-    if (!studentId || !sessionId) {
-      return res
-        .status(400)
-        .json({ error: "Student ID and Session ID are required!" });
-    }
 
-    const session = await Session.findById(sessionId);
-    if (!session) {
-      return res.status(404).json({ error: "Session not found!" });
-    }
-
-    if (new Date() > session.expiresAt) {
-      return res.status(400).json({ error: "Session has expired!" });
-    }
-
-    return res.json({ qrCode: session.currentQRCode });
-  } catch (error) {
-    console.error("Error joining session:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
