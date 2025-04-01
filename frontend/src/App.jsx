@@ -13,6 +13,7 @@ import {
   ForgotPassword,
 } from "../pages/Index";
 import CourseDetails from "../pages/CourseDetails";
+import StudentCoursePage from "../pages/StudentCoursePage";
 //import { Course } from "../../backend/model/Course";
 
 function App() {
@@ -29,8 +30,8 @@ function App() {
           <Route path="logout" element={<Logout />} />
           <Route path="create-session" element={<NewSession />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="teacher/class/:id" element={<CourseDetails/>}/>
-          <Route path="student/class/:id" element={<CourseDetails/>}/>
+          <Route path="course/:id" element={<CourseDetails/>}/>
+          <Route path="student/course/:id" element={<StudentCoursePage/>}/>
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>

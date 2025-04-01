@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { SHA256 } from "crypto-js";
 import axios from "axios";
 import "../styles/Login.css";
 import image512 from "../assets/logo512.png";
@@ -14,22 +13,16 @@ const Login = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const navigate = useNavigate();
 
-  function computeHash(input) {
-    return SHA256(input).toString();
-  }
-
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     let email = e.target.email.value;
-    let password = e.target.password.value;
+    let password = e.target.password.value; // Send raw password
 
     if (email && password) {
-      password = computeHash(password);
-      password = computeHash(email + password);
       const formData = { email, password };
       try {
         const response = await axios.post(
-          "http://localhost:5050/users/signin",
+          "https://scanme-wkq3.onrender.com/users/signin",
           formData
         );
         const { user, type, token } = response.data;

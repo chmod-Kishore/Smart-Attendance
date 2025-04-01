@@ -1,51 +1,85 @@
-import { useState } from "react";
-import { QrReader } from "react-qr-reader";
+import { useEffect, useState } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import axios from "axios";
 
 export default function QRScanner({ sessionId, studentId }) {
   const [result, setResult] = useState("");
+  const [hasPermission, setHasPermission] = useState(null);
+  const [facingMode, setFacingMode] = useState("environment");
+
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then(() => setHasPermission(true))
+      .catch(() => setHasPermission(false));
+  }, []);
+
+  useEffect(() => {
+    if (!hasPermission) return;
+
+    const scanner = new Html5QrcodeScanner("qr-reader", {
+      fps: 10,
+      qrbox: { width: 250, height: 250 },
+      facingMode,
+      disableFlip: true, 
+      rememberLastUsedCamera: true, 
+      supportedScanTypes: [0],
+    });
+
+    scanner.render(
+      async (decodedText) => {
+        scanner.clear();
+        handleScan(decodedText);
+      },
+      (errorMessage) => {
+        console.error("QR Scan Error:", errorMessage);
+      }
+    );
+
+    return () => scanner.clear();
+  }, [hasPermission, facingMode]);
 
   const handleScan = async (data) => {
-    if (data?.text) {
-      console.log("Scanned QR Code Data:", data.text); // ✅ Debugging log
+    if (!data) return;
 
-      try {
-        const position = await getUserLocation();
+    console.log("Scanned QR Code Data:", data);
 
-        // ✅ Send full scannedQRData as received from scanner
-        const res = await axios.post(
-          "http://localhost:5050/sessions/mark-attendance",
-          {
-            studentId,
-            sessionId,
-            latitude: position.latitude,
-            longitude: position.longitude,
-            scannedQRData: data.text, // ✅ Send full scanned data
-          }
-        );
+    try {
+      const position = await getUserLocation();
+      const res = await axios.post(
+        "https://scanme-wkq3.onrender.com/sessions/mark-attendance",
+        {
+          studentId,
+          sessionId,
+          latitude: position.latitude,
+          longitude: position.longitude,
+          scannedQRData: data,
+        }
+      );
 
-        setResult(res.data.message);
-      } catch (error) {
-        console.error("Error processing QR Code:", error);
-        setResult(error.response?.data?.error || "Failed to mark attendance");
-      }
+      setResult(res.data.message);
+    } catch (error) {
+      console.error("Error processing QR Code:", error);
+      setResult(error.response?.data?.error || "Failed to mark attendance");
     }
   };
 
   return (
     <div>
-      <QrReader
-        delay={300}
-        onResult={handleScan}
-        constraints={{ facingMode: { ideal: "environment" } }} // ✅ Opens back camera
-        style={{ width: "100%" }}
-      />
+      <button
+        onClick={() =>
+          setFacingMode(facingMode === "environment" ? "user" : "environment")
+        }
+      >
+        Switch Camera
+      </button>
+      <div id="qr-reader"></div>
       <p>{result}</p>
     </div>
   );
 }
 
-// ✅ Get User Location with Error Handling
+// Get user location
 async function getUserLocation() {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
