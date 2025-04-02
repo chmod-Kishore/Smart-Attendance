@@ -3,7 +3,6 @@ import "../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import image512 from "../assets/logo512.png";
-import { SHA256 } from "crypto-js";
 import see from "../assets/see.png";
 import hide from "../assets/hide.png";
 
@@ -15,10 +14,6 @@ const Signup = () => {
   );
   const [userType, setUserType] = useState("student");
   const navigate = useNavigate();
-
-  function computeHash(input) {
-    return SHA256(input).toString();
-  }
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
@@ -35,9 +30,6 @@ const Signup = () => {
 
     if (password.length > 0 && confirmPassword.length > 0) {
       if (password === confirmPassword) {
-        password = computeHash(password);
-        password = computeHash(email + password);
-
         const formData = {
           name,
           email,
@@ -49,7 +41,10 @@ const Signup = () => {
         };
 
         try {
-          await axios.post("http://localhost:5050/users/signup", formData);
+          await axios.post(
+            "https://scanme-wkq3.onrender.com/users/signup",
+            formData
+          );
           navigate("/login");
         } catch (err) {
           console.log(err);
@@ -75,9 +70,12 @@ const Signup = () => {
     document.querySelector(".second-slide").style.display = "block";
 
     try {
-      const res = await axios.post("http://localhost:5050/users/sendmail", {
-        email,
-      });
+      const res = await axios.post(
+        "https://scanme-wkq3.onrender.com/users/sendmail",
+        {
+          email,
+        }
+      );
       setOtp(res.data.otp);
     } catch (err) {
       console.log(err);
