@@ -21,6 +21,9 @@ export default function QRScanner({ sessionId, studentId }) {
       fps: 10,
       qrbox: { width: 250, height: 250 },
       facingMode,
+      disableFlip: true, 
+      rememberLastUsedCamera: true, 
+      supportedScanTypes: [0],
     });
 
     scanner.render(
@@ -39,7 +42,7 @@ export default function QRScanner({ sessionId, studentId }) {
   const handleScan = async (data) => {
     if (!data) return;
 
-    console.log("Scanned QR Code Data:", data); // ✅ `data` is already a string
+    console.log("Scanned QR Code Data:", data);
 
     try {
       const position = await getUserLocation();
@@ -50,7 +53,7 @@ export default function QRScanner({ sessionId, studentId }) {
           sessionId,
           latitude: position.latitude,
           longitude: position.longitude,
-          scannedQRData: data, // ✅ Corrected here
+          scannedQRData: data,
         }
       );
 
