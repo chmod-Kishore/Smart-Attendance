@@ -23,18 +23,18 @@ const CourseDetails = () => {
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [attendanceData, setAttendanceData] = useState([]);
 
+  const fetchCourseDetails = async () => {
+    try {
+      const res = await clientServer.get(`/courses/${id}`);
+      console.log("Course Data:", res.data);
+      setCourse(res.data);
+    } catch (error) {
+      console.error("Error fetching course details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchCourseDetails = async () => {
-      try {
-        const res = await clientServer.get(`/courses/${id}`);
-        console.log("Course Data:", res.data);
-        setCourse(res.data);
-      } catch (error) {
-        console.error("Error fetching course details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCourseDetails();
   }, [id]);
   const handleCheckAttendance = (session) => {
@@ -97,10 +97,14 @@ const CourseDetails = () => {
         <h2>ScanMe</h2>
         <div className="course-sidebar-details">
           <h3>{course.courseName}</h3>
-          <p><strong>Course Code:</strong> {course.courseCode}</p>
-          <p><strong>Invitation Code:</strong> {course.invitationCode}</p>
+          <p>
+            <strong>Course Code:</strong> {course.courseCode}
+          </p>
+          <p>
+            <strong>Invitation Code:</strong> {course.invitationCode}
+          </p>
         </div>
-        <button 
+        <button
           className="create-session-btn"
           onClick={() => {
             fetchLocation(); // ✅ Fetch location before showing modal
@@ -113,21 +117,26 @@ const CourseDetails = () => {
         >
           Create Session
         </button>
-        <button 
+        <button
           className="session-details-btn"
-          onClick={() => setShowSessions(!showSessions)} // ✅ Corrected toggle
+          onClick={() => {
+            fetchCourseDetails();
+            setShowSessions(!showSessions);
+          }} // ✅ Corrected toggle
         >
           {showSessions ? "Hide Session Details" : "Show Session Details"}
         </button>
       </aside>
-  
+
       {/* Main Content */}
       <main className="dashboard-content">
         <h1 className="course-title">{course.courseName}</h1>
         <div className="course-info">
-          <p><strong>Instructor:</strong> {course.teacherId.name}</p>
+          <p>
+            <strong>Instructor:</strong> {course.teacherId.name}
+          </p>
         </div>
-  
+
         {/* Enrolled Students Table */}
         <h2 className="section-title">Enrolled Students</h2>
         {course.students.length > 0 ? (
@@ -177,7 +186,11 @@ const CourseDetails = () => {
                       <td>{session.duration}</td>
                       <td>{new Date(session.expiresAt).toLocaleString()}</td>
                       <td>{session.attendance.length} students</td>
-                      <td><button onClick={() => handleCheckAttendance(session)}>Check Attendance</button></td>
+                      <td>
+                        <button onClick={() => handleCheckAttendance(session)}>
+                          Check Attendance
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -217,10 +230,21 @@ const CourseDetails = () => {
                 }))
               }
             />
-            <p className="location-info">Latitude: {sessionDetails.latitude || "Fetching..."}</p>
-            <p className="location-info">Longitude: {sessionDetails.longitude || "Fetching..."}</p>
-            <button className="modal-btn" onClick={handleCreateSession}>Create</button>
-            <button className="modal-btn cancel" onClick={() => setShowSessionModal(false)}>Cancel</button>
+            <p className="location-info">
+              Latitude: {sessionDetails.latitude || "Fetching..."}
+            </p>
+            <p className="location-info">
+              Longitude: {sessionDetails.longitude || "Fetching..."}
+            </p>
+            <button className="modal-btn" onClick={handleCreateSession}>
+              Create
+            </button>
+            <button
+              className="modal-btn cancel"
+              onClick={() => setShowSessionModal(false)}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
@@ -250,7 +274,12 @@ const CourseDetails = () => {
             ) : (
               <p>No attendance records available.</p>
             )}
-            <button className="modal-btn" onClick={() => setShowAttendanceModal(false)}>Close</button>
+            <button
+              className="modal-btn"
+              onClick={() => setShowAttendanceModal(false)}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
@@ -259,7 +288,9 @@ const CourseDetails = () => {
           <div className="modal-content">
             <h2>Session QR Code</h2>
             <QRDisplay sessionId={sessionId} />
-            <button className="modal-btn" onClick={() => setShowQR(false)}>Close</button>
+            <button className="modal-btn" onClick={() => setShowQR(false)}>
+              Close
+            </button>
           </div>
         </div>
       )}

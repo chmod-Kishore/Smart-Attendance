@@ -1,7 +1,6 @@
 import express from "express";
 import {
   createSession,
-  joinSession,
   markAttendance,
 } from "../controllers/SessionController.js";
 
