@@ -3,7 +3,7 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Dark container and sidebar */
+/* Dashboard container and sidebar */
 .dashboard-wrapper {
   display: flex;
   background-color: #1c2032;
@@ -23,7 +23,7 @@ body {
   margin-bottom: 30px;
 }
 
-/* Header section */
+/* Dashboard content */
 .dashboard-content {
   flex: 1;
   padding: 20px;
@@ -36,6 +36,7 @@ body {
   margin-bottom: 30px;
 }
 
+/* Scan box */
 .scanme-box {
   background-color: #1c2032;
   border-radius: 12px;
@@ -86,22 +87,7 @@ body {
   transform: translateY(-3px);
 }
 
-.view-btn {
-  margin-top: 10px;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.view-btn:hover {
-  background-color: #2563eb;
-}
-
-/* Modal dark styling */
+/* Modal styling */
 .modal {
   position: fixed;
   top: 0;
@@ -136,18 +122,37 @@ body {
   border-radius: 8px;
 }
 
-.create-btn {
+/* Buttons */
+.view-btn {
+  margin-top: 10px;
   background-color: #3b82f6;
-  border: none;
   color: white;
-  padding: 10px;
-  border-radius: 8px;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
-.create-btn:hover {
+.view-btn:hover {
   background-color: #2563eb;
+}
+
+.create-btn, .sidebar button, .join-btn {
+  background-color: #00c853;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-weight: bold;
+}
+
+.create-btn:hover,
+.sidebar button:hover,
+.join-btn:hover {
+  background-color: #00b34c;
 }
 
 .cancel-btn {
