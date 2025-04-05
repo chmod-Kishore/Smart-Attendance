@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/TeacherDashboard.css";
+import styles from "../styles/TeacherDashboard.module.css";
 import { clientServer } from "../src/config";
 
 const TeacherDashboard = () => {
@@ -11,7 +10,7 @@ const TeacherDashboard = () => {
   const [courseCode, setCourseCode] = useState("");
   const [invitationCode, setInvitationCode] = useState("");
   const [teacherId, setTeacherId] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Added loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -20,7 +19,6 @@ const TeacherDashboard = () => {
       try {
         const userEmail = localStorage.getItem("email");
         if (!userEmail) return;
-
         const res = await clientServer.get(`/users/user?email=${userEmail}`);
         if (res.data.user) {
           localStorage.setItem("id", res.data.user._id);
@@ -30,7 +28,6 @@ const TeacherDashboard = () => {
         console.error("Error fetching user details:", error);
       }
     };
-
     fetchUserDetails();
   }, []);
 
@@ -38,76 +35,67 @@ const TeacherDashboard = () => {
     const fetchClasses = async () => {
       if (!teacherId) return;
       try {
-        setIsLoading(true); // Show loading state
+        setIsLoading(true);
         const res = await clientServer.get(`/courses/teacher/${teacherId}/classes`);
         setClasses(res.data);
       } catch (error) {
         console.error("Error fetching classes:", error);
       } finally {
-        setIsLoading(false); // Hide loading state
+        setIsLoading(false);
       }
     };
     fetchClasses();
   }, [teacherId]);
 
   const handleCreateClass = async () => {
-    if (!teacherId) {
-      alert("Error: Teacher ID not found. Please refresh and try again.");
-      return;
-    }
-    
-    if (!courseName.trim() || !courseCode.trim() || !invitationCode.trim()) {
-      alert("All fields are required!");
-      return;
-    }
+    if (!teacherId) return alert("Teacher ID not found");
+    if (!courseName.trim() || !courseCode.trim() || !invitationCode.trim())
+      return alert("All fields are required!");
 
     try {
-      const response = await clientServer.post("/courses/create-class", {
+      await clientServer.post("/courses/create-class", {
         teacherId,
         courseName,
         courseCode,
         invitationCode,
       });
 
-      console.log("Class created successfully:", response.data);
-
-      // Reset form fields
       setCourseName("");
       setCourseCode("");
       setInvitationCode("");
       setShowClassModal(false);
 
-      // Fetch updated class list
       const updatedClasses = await clientServer.get(`/courses/teacher/${teacherId}/classes`);
       setClasses(updatedClasses.data);
-
     } catch (error) {
-      console.error("Error creating class:", error.response ? error.response.data : error);
-      alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
+      console.error("Error creating class:", error);
+      alert(error.response?.data?.message || "Something went wrong!");
     }
   };
 
   return (
-    <div className="dashboard-container">
-      <aside className="sidebar">
+    <div className={styles["dashboard-wrapper"]}>
+      <aside className={styles.sidebar}>
         <h2>ScanMe</h2>
         <button onClick={() => setShowClassModal(true)}>+ Create Class</button>
       </aside>
-      <main className="dashboard-content">
+
+      <main className={styles["dashboard-content"]}>
         <h1>Your Classes</h1>
-        
         {isLoading ? (
           <p>Loading classes...</p>
         ) : (
-          <div className="class-grid">
+          <div className={styles["class-grid"]}>
             {classes.length > 0 ? (
               classes.map((classItem) => (
-                <div key={classItem._id} className="class-card">
+                <div
+                  key={classItem._id}
+                  className={styles["class-card"]}
+                  onClick={() => navigate(`/course/${classItem._id}`)}
+                >
                   <h3>{classItem.courseName}</h3>
                   <p>Code: {classItem.courseCode}</p>
-                  <button onClick={() => navigate(`/course/${classItem._id}`)}>
-                    View Details
-                  </button>
+                  <button className={styles["view-btn"]}>View Details</button>
                 </div>
               ))
             ) : (
@@ -117,10 +105,9 @@ const TeacherDashboard = () => {
         )}
       </main>
 
-      {/* Modal for Creating a Class */}
       {showClassModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
             <h2>Create New Class</h2>
             <input
               type="text"
@@ -140,8 +127,12 @@ const TeacherDashboard = () => {
               value={invitationCode}
               onChange={(e) => setInvitationCode(e.target.value)}
             />
-            <button onClick={handleCreateClass}>Create</button>
-            <button onClick={() => setShowClassModal(false)}>Cancel</button>
+            <button onClick={handleCreateClass} className={styles["create-btn"]}>
+              Create
+            </button>
+            <button onClick={() => setShowClassModal(false)} className={styles["cancel-btn"]}>
+              Cancel
+            </button>
           </div>
         </div>
       )}

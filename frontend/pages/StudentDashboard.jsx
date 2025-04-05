@@ -1,134 +1,119 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/StudentDashboard.css";
+import styles from "../styles/StudentDashboard.module.css";
 import { clientServer } from "../src/config";
 
 const StudentDashboard = () => {
-  const [classes, setClasses] = useState([]);
-  const [showJoinSessionModal, setShowJoinSessionModal] = useState(false);
-  const [showJoinClassModal, setShowJoinClassModal] = useState(false);
-  const [sessionId, setSessionId] = useState("");
-  const [studentId, setStudentId] = useState(null);
-  const [qrCode, setQrCode] = useState(null);
-  const [showQRScanner, setShowQRScanner] = useState(false);
-  const [courseName, setCourseName] = useState("");
+  const [courses, setCourses] = useState([]);
   const [invitationCode, setInvitationCode] = useState("");
-  const [reloadFlag, setReloadFlag] = useState(false); // Reload flag to trigger re-fetch
+  const [studentId, setStudentId] = useState(null);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
-  // ✅ Fetch Student Details
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const userEmail = localStorage.getItem("email");
         if (!userEmail) return;
-
         const res = await clientServer.get(`/users/user?email=${userEmail}`);
         if (res.data.user) {
           localStorage.setItem("id", res.data.user._id);
           setStudentId(res.data.user._id);
         }
       } catch (error) {
-        console.error("Error fetching student details:", error);
+        console.error("Error fetching user details:", error);
       }
     };
-
     fetchUserDetails();
   }, []);
 
-  // ✅ Fetch Enrolled Classes
   useEffect(() => {
-    const fetchClasses = async () => {
+    const fetchCourses = async () => {
       if (!studentId) return;
       try {
-        const res = await clientServer.get(
-          `/courses/student/${studentId}/classes`
-        );
-        setClasses(res.data);
+        setIsLoading(true);
+        const res = await clientServer.get(`/courses/student/${studentId}/classes`);
+        setCourses(res.data);
       } catch (error) {
-        console.error("Error fetching enrolled classes:", error);
+        console.error("Error fetching courses:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
+    fetchCourses();
+  }, [studentId]);
 
-    fetchClasses();
-  }, [studentId, reloadFlag]);  // Trigger fetch on studentId or reloadFlag change
-
-  // ✅ Handle Joining Class
   const handleJoinClass = async () => {
-    if (!courseName.trim() || !invitationCode.trim())
-      return alert("Course Name and Invitation Code are required!");
-    if (!studentId) return alert("Student ID not found!");
+    if (!studentId) return alert("Student ID not found");
+    if (!invitationCode.trim()) return alert("Invitation code is required");
 
     try {
-      const res = await axios.post(
-        "https://scanme-wkq3.onrender.com/courses/join-class",
-        {
-          courseName,
-          studentId,
-          invitationCode,
-        }
-      );
+      await clientServer.post("/courses/join-class", {
+        studentId,
+        invitationCode,
+      });
 
-      alert(res.data.message);
-      setShowJoinClassModal(false);
-      setClasses((prev) => [...prev, res.data.course]); // ✅ Update UI immediately
-      setReloadFlag(!reloadFlag);  // Toggle the reloadFlag to trigger refetch
+      setInvitationCode("");
+      setShowJoinModal(false);
+
+      const updatedCourses = await clientServer.get(`/courses/student/${studentId}/classes`);
+      setCourses(updatedCourses.data);
     } catch (error) {
       console.error("Error joining class:", error);
-      alert(error.response?.data?.error || "Failed to join class");
+      alert(error.response?.data?.message || "Something went wrong!");
     }
   };
 
   return (
-    <div className="dashboard-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
+    <div className={styles["dashboard-wrapper"]}>
+      <aside className={styles.sidebar}>
         <h2>ScanMe</h2>
-        <button onClick={() => setShowJoinClassModal(true)}>Join Class</button>
+        <button onClick={() => setShowJoinModal(true)}>+ Join Class</button>
       </aside>
 
-      {/* Main Content */}
-      <main className="dashboard-content">
-        <h1>Your Classes</h1>
-        <div className="class-grid">
-          {classes.length > 0 ? (
-            classes.map((classItem) => (
-              <div 
-                key={classItem._id} 
-                className="class-card"
-                onClick={() => navigate(`/student/course/${classItem._id}`)} // ✅ Navigate on click
-              >
-                <h3>{classItem.courseName}</h3>
-                <p>Code: {classItem.courseCode}</p>
-              </div>
-            ))
-          ) : (
-            <p>No classes joined yet.</p>
-          )}
-        </div>
+      <main className={styles["dashboard-content"]}>
+        <h1>Your Courses</h1>
+        {isLoading ? (
+          <p>Loading courses...</p>
+        ) : (
+          <div className={styles["course-grid"]}>
+            {courses.length > 0 ? (
+              courses.map((course) => (
+                <div
+                  key={course._id}
+                  className={styles["course-card"]}
+                  onClick={() => navigate(`/course/${course._id}`)}
+                >
+                  <h3>{course.courseName}</h3>
+                  <p>Code: {course.courseCode}</p>
+                  <button className={styles["view-btn"]}>View Details</button>
+                </div>
+              ))
+            ) : (
+              <p>No courses found.</p>
+            )}
+          </div>
+        )}
       </main>
 
-      {/* Modal for Joining Class */}
-      {showJoinClassModal && (
-        <div className="modal">
-          <div className="modal-content">
+      {showJoinModal && (
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
             <h2>Join a Class</h2>
-            <input
-              type="text"
-              placeholder="Enter Course Name"
-              value={courseName}
-              onChange={(e) => setCourseName(e.target.value)}
-            />
             <input
               type="text"
               placeholder="Enter Invitation Code"
               value={invitationCode}
               onChange={(e) => setInvitationCode(e.target.value)}
             />
-            <button onClick={handleJoinClass}>Join</button>
-            <button onClick={() => setShowJoinClassModal(false)}>Cancel</button>
+            <button onClick={handleJoinClass} className={styles["join-btn"]}>
+              Join
+            </button>
+            <button onClick={() => setShowJoinModal(false)} className={styles["cancel-btn"]}>
+              Cancel
+            </button>
           </div>
         </div>
       )}
