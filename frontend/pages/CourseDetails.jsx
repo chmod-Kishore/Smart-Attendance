@@ -22,6 +22,11 @@ const CourseDetails = () => {
   const [showQR, setShowQR] = useState(false);
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [attendanceData, setAttendanceData] = useState([]);
+  const [showUpdateAttendanceModal, setShowUpdateAttendanceModal] =
+    useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedSessionId, setSelectedSessionId] = useState("");
+  const [newStatus, setNewStatus] = useState("Present");
 
   const fetchCourseDetails = async () => {
     try {
@@ -84,6 +89,29 @@ const CourseDetails = () => {
     } catch (error) {
       console.error("Error creating session:", error);
       alert("Failed to create session.");
+    }
+  };
+
+  const handleUpdateAttendance = async () => {
+    if (!selectedSessionId || !selectedStudent || !newStatus) {
+      return alert("All fields are required!");
+    }
+
+    try {
+      const res = await axios.post(
+        "https://scanme-wkq3.onrender.com/sessions/update-attendance-status",
+        {
+          sessionId: selectedSessionId,
+          studentId: selectedStudent._id,
+          status: newStatus,
+        }
+      );
+      alert("Attendance status updated successfully!");
+      setShowUpdateAttendanceModal(false);
+      fetchCourseDetails(); // Refresh course details
+    } catch (error) {
+      console.error("Error updating attendance status:", error);
+      alert("Failed to update attendance status.");
     }
   };
 
@@ -259,6 +287,7 @@ const CourseDetails = () => {
                     <th>Name</th>
                     <th>Roll No</th>
                     <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -267,6 +296,23 @@ const CourseDetails = () => {
                       <td>{att.studentId.name}</td>
                       <td>{att.studentId.rollNo}</td>
                       <td>{att.status}</td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            setSelectedStudent(att.studentId);
+                            setSelectedSessionId(
+                              course.sessions.find((s) =>
+                                s.attendance.some(
+                                  (a) => a.studentId._id === att.studentId._id
+                                )
+                              )._id
+                            );
+                            setShowUpdateAttendanceModal(true);
+                          }}
+                        >
+                          Update Status
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -279,6 +325,32 @@ const CourseDetails = () => {
               onClick={() => setShowAttendanceModal(false)}
             >
               Close
+            </button>
+          </div>
+        </div>
+      )}
+      {showUpdateAttendanceModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Update Attendance Status</h2>
+            <p>
+              Student: {selectedStudent?.name} ({selectedStudent?.rollNo})
+            </p>
+            <select
+              value={newStatus}
+              onChange={(e) => setNewStatus(e.target.value)}
+            >
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+            </select>
+            <button className="modal-btn" onClick={handleUpdateAttendance}>
+              Update
+            </button>
+            <button
+              className="modal-btn cancel"
+              onClick={() => setShowUpdateAttendanceModal(false)}
+            >
+              Cancel
             </button>
           </div>
         </div>
