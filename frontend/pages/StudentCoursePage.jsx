@@ -36,7 +36,6 @@ const StudentCoursePage = () => {
     }
   }, [id]);
 
-
   const handleCheckAttendance = (session) => {
     const studentAttendance = session.attendance.find(
       (att) => att.studentId._id === studentId
@@ -71,8 +70,12 @@ const StudentCoursePage = () => {
     <div className="course-container">
       <div className="course-details">
         <h1>{course.courseName}</h1>
-        <p><strong>Instructor:</strong> {course.teacherId.name}</p>
-        <p><strong>Course Code:</strong> {course.courseCode}</p>
+        <p>
+          <strong>Instructor:</strong> {course.teacherId.name}
+        </p>
+        <p>
+          <strong>Course Code:</strong> {course.courseCode}
+        </p>
 
         {/* Session Table */}
         <h2>Session Details</h2>
@@ -84,8 +87,8 @@ const StudentCoursePage = () => {
                 <th>Radius (m)</th>
                 <th>Duration (mins)</th>
                 <th>Expires At</th>
-                <th>Check Attendance</th>
-                <th>Scan</th>
+                <th>Status</th>
+                <th>Mark Attendance</th>
               </tr>
             </thead>
             <tbody>
@@ -96,17 +99,17 @@ const StudentCoursePage = () => {
                   <td>{session.duration}</td>
                   <td>{new Date(session.expiresAt).toLocaleString()}</td>
                   <td>
-                    <button onClick={() => handleCheckAttendance(session)}>
-                      Check Attendance
-                    </button>
+                    {session.attendance.find(
+                      (att) => att.studentId._id === studentId
+                    )?.status || "Not Marked"}
                   </td>
                   <td>
-                    {/* Scanner button is enabled only if within the time range */}
                     <button
                       disabled={!isScannerEnabled(session)}
-                      onClick={() => {setSessionId(session._id);
-                        setShowQRScanner(true)}}
-                        
+                      onClick={() => {
+                        setSessionId(session._id);
+                        setShowQRScanner(true);
+                      }}
                     >
                       📷
                     </button>
@@ -124,10 +127,21 @@ const StudentCoursePage = () => {
           <div className="modal">
             <div className="modal-content">
               <h2>Attendance Status</h2>
-              <p><strong>Name:</strong> {attendanceData.name}</p>
-              <p><strong>Roll No:</strong> {attendanceData.rollNo}</p>
-              <p><strong>Status:</strong> {attendanceData.status}</p>
-              <button className="modal-btn" onClick={() => setShowAttendanceModal(false)}>Close</button>
+              <p>
+                <strong>Name:</strong> {attendanceData.name}
+              </p>
+              <p>
+                <strong>Roll No:</strong> {attendanceData.rollNo}
+              </p>
+              <p>
+                <strong>Status:</strong> {attendanceData.status}
+              </p>
+              <button
+                className="modal-btn"
+                onClick={() => setShowAttendanceModal(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         )}
@@ -138,7 +152,12 @@ const StudentCoursePage = () => {
             <div className="modal-content">
               <h2>Scan QR Code</h2>
               <QRScanner sessionId={sessionId} studentId={studentId} />
-              <button className="modal-btn" onClick={() => setShowQRScanner(false)}>Close</button>
+              <button
+                className="modal-btn"
+                onClick={() => setShowQRScanner(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         )}
@@ -148,4 +167,3 @@ const StudentCoursePage = () => {
 };
 
 export default StudentCoursePage;
-

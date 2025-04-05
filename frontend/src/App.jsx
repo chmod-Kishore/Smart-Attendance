@@ -30,8 +30,8 @@ function App() {
           <Route path="logout" element={<Logout />} />
           <Route path="create-session" element={<NewSession />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="course/:id" element={<CourseDetails/>}/>
-          <Route path="student/course/:id" element={<StudentCoursePage/>}/>
+          <Route path="course/:id" element={<CourseDetails />} />
+          <Route path="student/course/:id" element={<StudentCoursePage />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>
