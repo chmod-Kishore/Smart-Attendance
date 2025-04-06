@@ -65,25 +65,33 @@ const Login = () => {
 
   return (
     <div className="login-main">
-      <div className="login-left">
-        <img alt="Full" src={image512} />
-      </div>
-      <div className="login-right">
-        <div className="login-right-container">
-          <div className="login-logo">
-            <img alt="logo" src="/logo2.webp" />
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-header">
+            <h2>Welcome back</h2>
+            <p>Please enter your details to sign in</p>
           </div>
-          <div className="login-center">
-            <h2>Welcome back!</h2>
-            <p>Please enter your details</p>
-            <form onSubmit={handleLoginSubmit}>
-              <input type="email" placeholder="Email" name="email" required />
+          
+          <form onSubmit={handleLoginSubmit} className="login-form">
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input 
+                type="email" 
+                id="email"
+                name="email" 
+                placeholder="Enter your email" 
+                required 
+              />
+            </div>
 
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
               <div className="password-container">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  id="password"
                   name="password"
+                  placeholder="Enter your password"
                   required
                 />
                 <img
@@ -93,22 +101,24 @@ const Login = () => {
                   className="password-toggle-icon"
                 />
               </div>
+            </div>
 
-              <div className="login-center-options">
-                <Link to="/forgot-password" className="forgot-pass-link">
-                  Forgot password?
-                </Link>
-              </div>
+            <div className="login-options">
+              <Link to="/forgot-password" className="forgot-password-link">
+                Forgot password?
+              </Link>
+            </div>
 
-              <div className="login-center-buttons">
-                <button type="submit">Log In</button>
-              </div>
-            </form>
+            <button type="submit" className="login-button">
+              Sign In
+            </button>
+          </form>
+          
+          <div className="login-footer">
+            <p>
+              Don't have an account? <Link to="/register" className="signup-link">Sign Up</Link>
+            </p>
           </div>
-
-          <p className="login-bottom-p">
-            Don't have an account? <Link to="/register">Sign Up</Link>
-          </p>
         </div>
       </div>
     </div>

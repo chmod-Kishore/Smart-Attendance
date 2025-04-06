@@ -1,61 +1,103 @@
 .landing-main {
-  font-size: 30px;
+  font-size: 16px;
   height: 100vh;
   width: 100%;
-
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #1c2032; /* Dark blue background like in the image */
+  color: white;
+  font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif; /* Switched to Poppins as primary */
+}
+
+.landing-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem;
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-content {
+  width: 100%;
+  max-width: 400px; /* Reduced from 500px */
+  text-align: center;
+}
+
+.landing-header {
+  margin-bottom: 3rem;
+}
+
+.landing-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.landing-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.landing-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.landing-button {
+  display: block;
+  width: 100%;
+  max-width: 300px; /* Added max-width to reduce button size */
+  margin: 0 auto; /* Center the buttons */
+  padding: 0.75rem; /* Reduced padding from 1rem */
+  border-radius: 8px; /* Slightly smaller radius */
+  font-weight: 600;
+  font-size: 0.95rem; /* Slightly smaller font */
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .landing-login-button {
-  background: black;
+  background: #4d5ef6; /* Blue button color from image */
   color: white;
-  border: 3px solid black;
-  transition: background 1s linear 0ms;
-  transition: color 500ms linear 0ms;
-
-  width: 500px;
-  padding: 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  border-radius: 30px;
-  font-weight: 600;
-  margin-top: 10px;
-
-  font-size: 20px;
-  text-align: center;
-  text-decoration: none;
+  border: none;
 }
 
 .landing-register-button {
-  background: black;
+  background: rgba(255, 255, 255, 0.1);
   color: white;
-  border: 3px solid black;
-  transition: background 1s linear 0ms;
-  transition: color 500ms linear 0ms;
-
-  width: 500px;
-  padding: 16px;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 30px;
-  font-weight: 600;
-  margin-top: 10px;
-
-  font-size: 20px;
-  text-align: center;
-  text-decoration: none;
-}
-
-.landing-register-button:hover {
-  color: #333;
-  background-color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .landing-login-button:hover {
-  color: #333;
-  background-color: white;
+  background: #5d6df8; /* Slightly lighter blue on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 94, 246, 0.3);
+}
+
+.landing-register-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Add some responsive styles */
+@media (max-width: 600px) {
+  .landing-content {
+    max-width: 100%;
+  }
+  
+  .landing-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .landing-button {
+    max-width: 100%;
+  }
 }
