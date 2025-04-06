@@ -218,7 +218,7 @@ const StudentDashboard = () => {
                   <div
                     key={course._id}
                     className={styles["course-card"]}
-                    onClick={() => navigate(`/course/${course._id}`)}
+                    onClick={() => navigate(`/student/course/${course._id}`)}
                   >
                     <div className={styles["course-color-indicator"]}></div>
                     <div className={styles["course-content"]}>
