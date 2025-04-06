@@ -1,10 +1,123 @@
 .logout-main {
-  font-size: 30px;
   height: 100vh;
   width: 100%;
-
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  background-color: #1c2032;
+  color: white;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+.logout-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 0 1.5rem;
+}
+
+.logout-card {
+  background-color: rgba(28, 32, 50, 0.8);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Remove any potential background oval effect */
+.logout-card:before, 
+.logout-card:after {
+  display: none;
+}
+
+.logout-header {
+  margin-bottom: 1.5rem;
+}
+
+.logout-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.logout-header p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.logout-icon {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.countdown-container {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.countdown-bar {
+  height: 100%;
+  width: 100%;
+  background-color: #4d5ef6;
+  border-radius: 2px;
+  animation: countdown 3s linear forwards;
+}
+
+@keyframes countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.redirect-message {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+.logout-footer {
+  margin-top: 1.5rem;
+}
+
+.login-again-link {
+  display: inline-block;
+  color: #4d5ef6;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #4d5ef6;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.login-again-link:hover {
+  background-color: #4d5ef6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 94, 246, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .logout-container {
+    padding: 0 1rem;
+  }
+  
+  .logout-card {
+    padding: 1.5rem;
+  }
 }

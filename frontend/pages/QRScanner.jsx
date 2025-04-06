@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import axios from "axios";
 
-export default function QRScanner({ sessionId, studentId }) {
+export default function QRScanner({ sessionId, studentId, onSuccess }) {
   const [result, setResult] = useState("");
   const [hasPermission, setHasPermission] = useState(null);
   const [facingMode, setFacingMode] = useState("environment");
@@ -21,8 +21,8 @@ export default function QRScanner({ sessionId, studentId }) {
       fps: 10,
       qrbox: { width: 250, height: 250 },
       facingMode,
-      disableFlip: true, 
-      rememberLastUsedCamera: true, 
+      disableFlip: true,
+      rememberLastUsedCamera: true,
       supportedScanTypes: [0],
     });
 
@@ -58,6 +58,11 @@ export default function QRScanner({ sessionId, studentId }) {
       );
 
       setResult(res.data.message);
+
+      // ✅ Trigger parent refresh on success
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       console.error("Error processing QR Code:", error);
       setResult(error.response?.data?.error || "Failed to mark attendance");

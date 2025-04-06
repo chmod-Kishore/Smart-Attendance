@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 import { Student } from "../model/Student.js";
 import { Teacher } from "../model/Teacher.js";
 import JWT from "../middleware/JWT.js";
-import bcrypt, { hash } from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 async function Login(req, res) {
   const { email, password } = req.body;
@@ -38,7 +38,6 @@ async function Login(req, res) {
   }
 }
 
-// Create a new user
 async function Signup(req, res) {
   const { name, email, rollNo, dob, branch, dept, password, type } = req.body;
 
@@ -99,43 +98,64 @@ async function Signup(req, res) {
   }
 }
 
-//change password
 async function ForgotPassword(req, res) {
   const { email, password } = req.body;
-  let user = await Student.findOneAndUpdate({ email }, { password }).exec();
-  if (!user) {
-    user = await Teacher.findOneAndUpdate({ email }, { password }).exec();
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
   }
-  if (user) {
-    res
-      .status(200)
-      .json({ message: "Password updated successfully. You can now log in." });
-  } else {
-    res
-      .status(404)
-      .json({ message: "User not found. Please check the email entered." });
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Hashed password:", hashedPassword);
+
+    let user = await Student.findOne({ email });
+
+    if (user) {
+      await Student.updateOne(
+        { email },
+        { $set: { password: hashedPassword } }
+      );
+    } else {
+      user = await Teacher.findOne({ email });
+      if (user) {
+        await Teacher.updateOne(
+          { email },
+          { $set: { password: hashedPassword } }
+        );
+      }
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "Password reset successful" });
+  } catch (err) {
+    console.error("Error resetting password:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 }
 
-//edit user details
-async function EditUserDetails(req, res) {
-  const { email, name, dob } = req.body;
-  let user = await Student.findOne
-    .findOneAndUpdate({ email }, { name, dob })
-    .exec();
-  if (!user) {
-    user = await Teacher.findOneAndUpdate
-      .findOneAndUpdate({ email }, { name, dob })
-      .exec();
-  }
-  if (user) {
-    res.status(200).json({ message: "User details updated successfully." });
-  } else {
-    res
-      .status(404)
-      .json({ message: "User not found. Please check the email provided." });
-  }
-}
+// //edit user details
+// async function EditUserDetails(req, res) {
+//   const { email, name, dob } = req.body;
+//   let user = await Student.findOne
+//     .findOneAndUpdate({ email }, { name, dob })
+//     .exec();
+//   if (!user) {
+//     user = await Teacher.findOneAndUpdate
+//       .findOneAndUpdate({ email }, { name, dob })
+//       .exec();
+//   }
+//   if (user) {
+//     res.status(200).json({ message: "User details updated successfully." });
+//   } else {
+//     res
+//       .status(404)
+//       .json({ message: "User not found. Please check the email provided." });
+//   }
+// }
 
 //send mail
 function SendMail(req, res) {
@@ -198,7 +218,6 @@ const UserController = {
   Login,
   Signup,
   ForgotPassword,
-  EditUserDetails,
   SendMail,
   GetUserDetails, // ✅ Add the new function
 };

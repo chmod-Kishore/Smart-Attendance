@@ -1,4 +1,4 @@
-.login-main {
+.loginMain {
   height: 100vh;
   width: 100%;
   display: flex;
@@ -9,13 +9,13 @@
   font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-.login-container {
+.loginContainer {
   width: 100%;
   max-width: 400px;
   padding: 0 1.5rem;
 }
 
-.login-card {
+.loginCard {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   padding: 2rem;
@@ -23,43 +23,43 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.login-header {
+.loginHeader {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.login-header h2 {
+.loginHeader h2 {
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   letter-spacing: -0.5px;
 }
 
-.login-header p {
+.loginHeader p {
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 400;
 }
 
-.login-form {
+.loginForm {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
 
-.form-group label {
+.formGroup label {
   font-size: 0.85rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
 }
 
-.form-group input {
+.formGroup input {
   background-color: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -69,20 +69,20 @@
   transition: border-color 0.3s;
 }
 
-.form-group input:focus {
+.formGroup input:focus {
   outline: none;
   border-color: #4d5ef6;
 }
 
-.form-group input::placeholder {
+.formGroup input::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
-.password-container {
+.passwordContainer {
   position: relative;
 }
 
-.password-toggle-icon {
+.passwordToggleIcon {
   position: absolute;
   right: 1rem;
   top: 50%;
@@ -94,30 +94,29 @@
   transition: opacity 0.2s;
 }
 
-.password-toggle-icon:hover {
+.passwordToggleIcon:hover {
   opacity: 1;
 }
 
-.login-options {
+.loginOptions {
   display: flex;
   justify-content: flex-end;
-  margin-top: -0.5rem;
+  margin-top: 0.5rem;
 }
 
-.forgot-password-link {
-  color: #4d5ef6;
-  font-size: 0.8rem;
+.forgotPasswordLink {
+  color: #5065f6;
+  font-size: 0.85rem;
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.forgot-password-link:hover {
-  color: #6a79fa;
+.forgotPasswordLink:hover {
   text-decoration: underline;
 }
 
-.login-button {
-  background-color: #4d5ef6;
+.loginButton {
+  background-color: #5065f6;
   color: white;
   border: none;
   border-radius: 8px;
@@ -125,41 +124,41 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
-.login-button:hover {
-  background-color: #5d6df8;
+.loginButton:hover {
+  background-color: #6272ff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(77, 94, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(80, 101, 246, 0.3);
 }
 
-.login-footer {
+.loginFooter {
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.9rem;
 }
 
-.signup-link {
-  color: #4d5ef6;
+.signupLink {
+  color: #5065f6;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.signup-link:hover {
+.signupLink:hover {
   text-decoration: underline;
-  color: #6a79fa;
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
-  .login-container {
+  .loginContainer {
     padding: 0 1rem;
   }
   
-  .login-card {
+  .loginCard {
     padding: 1.5rem;
   }
 }
