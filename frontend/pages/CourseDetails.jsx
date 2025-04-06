@@ -278,8 +278,7 @@ const CourseDetails = () => {
                         <th>Date</th>
                         <th>Radius (m)</th>
                         <th>Duration (mins)</th>
-                        <th>Expires At</th>
-                        <th>Attendance</th>
+
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -289,10 +288,7 @@ const CourseDetails = () => {
                           <td>{new Date(session.date).toLocaleString()}</td>
                           <td>{session.radius}</td>
                           <td>{session.duration}</td>
-                          <td>
-                            {new Date(session.expiresAt).toLocaleString()}
-                          </td>
-                          <td>{session.attendance.length} students</td>
+
                           <td>
                             <button
                               className={styles["action-btn"]}
@@ -487,9 +483,9 @@ const CourseDetails = () => {
           <div className={styles["modal-content"]}>
             <h2>Attendance QR Code</h2>
             <div className={styles["qr-container"]}>
-              <QRDisplay sessionId={sessionId} />
+              <QRDisplay className="display" sessionId={sessionId} />
             </div>
-            <p>Have students scan this QR code to mark attendance</p>
+
             <div className={styles["modal-actions"]}>
               <button
                 className={styles["join-btn"]}

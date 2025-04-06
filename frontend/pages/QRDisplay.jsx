@@ -28,7 +28,6 @@ export default function QRDisplay({ sessionId }) {
 
   return (
     <div style={{ textAlign: "center", marginTop: "10px" }}>
-      <h3>Live Session QR Code</h3>
       {loading ? (
         <p>Loading QR Code...</p>
       ) : (

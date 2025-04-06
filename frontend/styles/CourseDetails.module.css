@@ -441,13 +441,40 @@
 }
 
 /* QR Container */
-.qr-container {
+/* .qr-container {
   background-color: white;
   padding: 20px;
   border-radius: 12px;
   margin: 20px auto;
   width: fit-content;
+  height: 200px;
+  
+} */
+/* .qr-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px auto;
+  width: fit-content;
+  height: 200px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+.qr-container {
+  background-color: #141824;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 200, 83, 0.2);
+  box-shadow: 0 0 15px rgba(0, 200, 83, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+
+
 
 /* Join Empty Button - Added missing style */
 .join-empty-btn {
@@ -518,4 +545,15 @@
   .empty-state {
     padding: 30px 15px;
   }
+}
+.code-input {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 16px; /* Adds space between input fields */
+  border-radius: 8px;
+  border: 1px solid #3a3f5c;
+  background-color: #141824;
+  color: #eaeaea;
+  font-size: 15px;
+  box-sizing: border-box;
 }

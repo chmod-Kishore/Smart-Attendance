@@ -192,7 +192,7 @@ const TeacherDashboard = () => {
                           Invitation: {classItem.invitationCode}
                         </p>
                         <p className={styles["student-count"]}>
-                          {classItem.studentCount || 0} Students
+                          {classItem.students.length || 0} Students
                         </p>
                       </div>
                       <button className={styles["view-btn"]}>
