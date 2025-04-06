@@ -100,20 +100,37 @@ async function Signup(req, res) {
 }
 
 //change password
+const bcrypt = require("bcryptjs");
+
 async function ForgotPassword(req, res) {
   const { email, password } = req.body;
-  let user = await Student.findOneAndUpdate({ email }, { password }).exec();
-  if (!user) {
-    user = await Teacher.findOneAndUpdate({ email }, { password }).exec();
-  }
-  if (user) {
-    res
-      .status(200)
-      .json({ message: "Password updated successfully. You can now log in." });
-  } else {
-    res
-      .status(404)
-      .json({ message: "User not found. Please check the email entered." });
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let user = await Student.findOneAndUpdate(
+      { email },
+      { password: hashedPassword }
+    ).exec();
+    if (!user) {
+      user = await Teacher.findOneAndUpdate(
+        { email },
+        { password: hashedPassword }
+      ).exec();
+    }
+
+    if (user) {
+      res.status(200).json({
+        message: "Password updated successfully. You can now log in.",
+      });
+    } else {
+      res.status(404).json({
+        message: "User not found. Please check the email entered.",
+      });
+    }
+  } catch (err) {
+    console.error("Error updating password:", err);
+    res.status(500).json({ message: "Server error while resetting password" });
   }
 }
 

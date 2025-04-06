@@ -14,10 +14,6 @@ const ForgotPassword = () => {
   );
   const navigate = useNavigate();
 
-  function computeHash(input) {
-    return SHA256(input).toString();
-  }
-
   const toggleTwo = async (e) => {
     e.preventDefault();
     const email = document.querySelector("input[name=email]").value;
@@ -65,8 +61,6 @@ const ForgotPassword = () => {
     if (password.length > 0 && cpassword.length > 0) {
       if (password === cpassword) {
         const email = document.querySelector("input[name=email]").value;
-        password = computeHash(password);
-        password = computeHash(email + password);
 
         const formData = {
           email,
@@ -74,7 +68,7 @@ const ForgotPassword = () => {
         };
         try {
           await axios.post(
-            "http://localhost:5050/users/forgotpassword",
+            "https://scanme-wkq3.onrender.com/users/forgotpassword",
             formData
           );
           navigate("/login");

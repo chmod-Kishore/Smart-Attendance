@@ -39,16 +39,16 @@ const CourseDetails = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchCourseDetails();
   }, [id]);
-  
+
   const handleCheckAttendance = (session) => {
     setAttendanceData(session.attendance);
     setShowAttendanceModal(true);
   };
-  
+
   const fetchLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -118,62 +118,67 @@ const CourseDetails = () => {
     }
   };
 
-  if (loading) return (
-    <div className={styles["loading-container"]}>
-      <div className={styles["loading-spinner"]}></div>
-      <p>Loading course details...</p>
-    </div>
-  );
-  
-  if (!course) return (
-    <div className={styles["empty-state"]}>
-      <div className={styles["empty-icon"]}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="15" y1="9" x2="9" y2="15"></line>
-          <line x1="9" y1="9" x2="15" y2="15"></line>
-        </svg>
+  if (loading)
+    return (
+      <div className={styles["loading-container"]}>
+        <div className={styles["loading-spinner"]}></div>
+        <p>Loading course details...</p>
       </div>
-      <h3>Course Not Found</h3>
-      <p>The course you're looking for doesn't exist or you don't have access to it.</p>
-    </div>
-  );
+    );
+
+  if (!course)
+    return (
+      <div className={styles["empty-state"]}>
+        <div className={styles["empty-icon"]}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <h3>Course Not Found</h3>
+        <p>
+          The course you're looking for doesn't exist or you don't have access
+          to it.
+        </p>
+      </div>
+    );
 
   return (
     <div className={styles["dashboard-wrapper"]}>
       {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles["sidebar-menu"]}>
-          <a href="/dashboard" className={styles["menu-item"]}>
+          <a href="/teacher-dashboard" className={styles["menu-item"]}>
             <span className={styles["menu-icon"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
                 <rect x="14" y="14" width="7" height="7"></rect>
                 <rect x="3" y="14" width="7" height="7"></rect>
               </svg>
             </span>
-            <span>Dashboard</span>
-          </a>
-
-          <a href="/attendance" className={styles["menu-item"]}>
-            <span className={styles["menu-icon"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 11l3 3L22 4"></path>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-              </svg>
-            </span>
-            <span>Attendance</span>
-          </a>
-
-          <a href="/profile" className={styles["menu-item"]}>
-            <span className={styles["menu-icon"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </span>
-            <span>Profile</span>
+            <span>Back</span>
           </a>
         </div>
 
@@ -202,7 +207,7 @@ const CourseDetails = () => {
             <span className={styles["btn-icon"]}>+</span>
             <span>Create Session</span>
           </button>
-          
+
           <button
             className={styles["toggle-sessions-btn"]}
             onClick={() => {
@@ -284,10 +289,12 @@ const CourseDetails = () => {
                           <td>{new Date(session.date).toLocaleString()}</td>
                           <td>{session.radius}</td>
                           <td>{session.duration}</td>
-                          <td>{new Date(session.expiresAt).toLocaleString()}</td>
+                          <td>
+                            {new Date(session.expiresAt).toLocaleString()}
+                          </td>
                           <td>{session.attendance.length} students</td>
                           <td>
-                            <button 
+                            <button
                               className={styles["action-btn"]}
                               onClick={() => handleCheckAttendance(session)}
                             >
@@ -315,7 +322,7 @@ const CourseDetails = () => {
           <div className={styles["modal-content"]}>
             <h2>Create New Session</h2>
             <p>Setting up attendance session for {course.courseName}</p>
-            
+
             <input
               type="text"
               className={styles["code-input"]}
@@ -328,7 +335,7 @@ const CourseDetails = () => {
                 }))
               }
             />
-            
+
             <input
               type="number"
               className={styles["code-input"]}
@@ -341,12 +348,12 @@ const CourseDetails = () => {
                 }))
               }
             />
-            
+
             <div className={styles["location-info"]}>
               <div>Latitude: {sessionDetails.latitude || "Fetching..."}</div>
               <div>Longitude: {sessionDetails.longitude || "Fetching..."}</div>
             </div>
-            
+
             <div className={styles["modal-actions"]}>
               <button
                 className={styles["cancel-btn"]}
@@ -354,7 +361,10 @@ const CourseDetails = () => {
               >
                 Cancel
               </button>
-              <button className={styles["join-btn"]} onClick={handleCreateSession}>
+              <button
+                className={styles["join-btn"]}
+                onClick={handleCreateSession}
+              >
                 Create Session
               </button>
             </div>
@@ -367,7 +377,7 @@ const CourseDetails = () => {
         <div className={styles.modal}>
           <div className={styles["modal-content"]}>
             <h2>Attendance Details</h2>
-            
+
             {attendanceData.length > 0 ? (
               <div className={styles["table-container"]}>
                 <table className={styles["data-table"]}>
@@ -385,7 +395,11 @@ const CourseDetails = () => {
                         <td>{att.studentId.name}</td>
                         <td>{att.studentId.rollNo}</td>
                         <td>
-                          <span className={`${styles["status-badge"]} ${styles[att.status.toLowerCase()]}`}>
+                          <span
+                            className={`${styles["status-badge"]} ${
+                              styles[att.status.toLowerCase()]
+                            }`}
+                          >
                             {att.status}
                           </span>
                         </td>
@@ -415,7 +429,7 @@ const CourseDetails = () => {
             ) : (
               <p>No attendance records available.</p>
             )}
-            
+
             <div className={styles["modal-actions"]}>
               <button
                 className={styles["join-btn"]}
@@ -433,11 +447,13 @@ const CourseDetails = () => {
         <div className={styles.modal}>
           <div className={styles["modal-content"]}>
             <h2>Update Attendance Status</h2>
-            
+
             <div className={styles["student-info"]}>
-              <p>Student: {selectedStudent?.name} ({selectedStudent?.rollNo})</p>
+              <p>
+                Student: {selectedStudent?.name} ({selectedStudent?.rollNo})
+              </p>
             </div>
-            
+
             <select
               className={styles["status-select"]}
               value={newStatus}
@@ -446,7 +462,7 @@ const CourseDetails = () => {
               <option value="Present">Present</option>
               <option value="Absent">Absent</option>
             </select>
-            
+
             <div className={styles["modal-actions"]}>
               <button
                 className={styles["cancel-btn"]}
@@ -454,8 +470,8 @@ const CourseDetails = () => {
               >
                 Cancel
               </button>
-              <button 
-                className={styles["join-btn"]} 
+              <button
+                className={styles["join-btn"]}
                 onClick={handleUpdateAttendance}
               >
                 Update Status
@@ -475,8 +491,8 @@ const CourseDetails = () => {
             </div>
             <p>Have students scan this QR code to mark attendance</p>
             <div className={styles["modal-actions"]}>
-              <button 
-                className={styles["join-btn"]} 
+              <button
+                className={styles["join-btn"]}
                 onClick={() => setShowQR(false)}
               >
                 Close
