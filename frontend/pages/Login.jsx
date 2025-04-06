@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/Login.css";
-import image512 from "../assets/logo512.png";
+import styles from "../styles/Login.module.css";
 import see from "../assets/see.png";
 import hide from "../assets/hide.png";
 
@@ -16,7 +15,7 @@ const Login = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     let email = e.target.email.value;
-    let password = e.target.password.value; // Send raw password
+    let password = e.target.password.value;
 
     if (email && password) {
       const formData = { email, password };
@@ -61,19 +60,19 @@ const Login = () => {
         navigate("/student-dashboard");
       }
     }
-  }, [token]);
+  }, [token, navigate]);
 
   return (
-    <div className="login-main">
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
+    <div className={styles.loginMain}>
+      <div className={styles.loginContainer}>
+        <div className={styles.loginCard}>
+          <div className={styles.loginHeader}>
             <h2>Welcome back</h2>
             <p>Please enter your details to sign in</p>
           </div>
           
-          <form onSubmit={handleLoginSubmit} className="login-form">
-            <div className="form-group">
+          <form onSubmit={handleLoginSubmit} className={styles.loginForm}>
+            <div className={styles.formGroup}>
               <label htmlFor="email">Email</label>
               <input 
                 type="email" 
@@ -84,9 +83,9 @@ const Login = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="password">Password</label>
-              <div className="password-container">
+              <div className={styles.passwordContainer}>
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
@@ -95,28 +94,28 @@ const Login = () => {
                   required
                 />
                 <img
-                  src={showPassword ? hide : see}
+                  src={showPassword ? see : hide}
                   onClick={() => setShowPassword(!showPassword)}
                   alt="Toggle visibility"
-                  className="password-toggle-icon"
+                  className={styles.passwordToggleIcon}
                 />
               </div>
             </div>
 
-            <div className="login-options">
-              <Link to="/forgot-password" className="forgot-password-link">
+            <div className={styles.loginOptions}>
+              <Link to="/forgot-password" className={styles.forgotPasswordLink}>
                 Forgot password?
               </Link>
             </div>
 
-            <button type="submit" className="login-button">
+            <button type="submit" className={styles.loginButton}>
               Sign In
             </button>
           </form>
           
-          <div className="login-footer">
+          <div className={styles.loginFooter}>
             <p>
-              Don't have an account? <Link to="/register" className="signup-link">Sign Up</Link>
+              Don't have an account? <Link to="/register" className={styles.signupLink}>Sign Up</Link>
             </p>
           </div>
         </div>

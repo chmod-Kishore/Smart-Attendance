@@ -1,0 +1,210 @@
+.signupMain {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1c2032; /* Dark blue background matching login */
+  color: white;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  overflow-y: auto;
+}
+
+.signupContainer {
+  width: 100%;
+  max-width: 480px; /* Slightly wider than login for forms */
+  padding: 0 1.5rem;
+}
+
+.signupCard {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.signupHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.signupHeader h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.signupHeader p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.signupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.formGroup input, 
+.formGroup select {
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 0.9rem;
+  transition: border-color 0.3s;
+}
+
+/* Fix for dropdown options */
+.formGroup select {
+  appearance: auto; /* Use native select styling */
+  cursor: pointer;
+}
+
+/* Styling the dropdown options */
+.formGroup select option {
+  background-color: #1c2032; /* Dark background matching the form */
+  color: white; /* Light text for contrast */
+  padding: 10px; /* Add some padding */
+}
+
+/* Selected option in the dropdown */
+.formGroup select option:checked {
+  background-color: #4d5ef6; /* Highlight with accent color */
+}
+
+/* Hover state for options */
+.formGroup select option:hover {
+  background-color: #2d3347; /* Slightly lighter than background */
+}
+
+.formGroup input:focus, 
+.formGroup select:focus {
+  outline: none;
+  border-color: #4d5ef6;
+}
+
+.formGroup input::placeholder,
+.formGroup select::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.passwordContainer {
+  position: relative;
+}
+
+.passwordToggleIcon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.passwordToggleIcon:hover {
+  opacity: 1;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.signupButton {
+  background-color: #6470fb; /* Using the color from your screenshot */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.signupButton:hover {
+  background-color: #7381ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 112, 251, 0.3);
+}
+
+.secondaryButton {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondaryButton:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.signupFooter {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.loginLink {
+  color: #6470fb; /* Using the color from your screenshot */
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+  color: #7381ff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .signupContainer {
+    padding: 0 1rem;
+  }
+  
+  .signupCard {
+    padding: 1.5rem;
+  }
+  
+  .buttonGroup {
+    flex-direction: column;
+  }
+}
+
+/* For all slides */
+.firstSlide,
+.secondSlide,
+.thirdSlide,
+.passwordSlide {
+  width: 100%;
+}
