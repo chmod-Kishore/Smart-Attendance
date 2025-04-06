@@ -161,15 +161,15 @@ const TeacherDashboard = () => {
       <main className={styles["dashboard-content"]}>
         <header className={styles["content-header"]}>
           <div className={styles["page-title"]}>
-            <h1>Your Classes</h1>
             <p className={styles["welcome-text"]}>Welcome back, {userName}!</p>
+            <h1>Your Classes</h1>
           </div>
         </header>
 
         {isLoading ? (
           <div className={styles["loading-container"]}>
             <div className={styles["loading-spinner"]}></div>
-            <p>Loading your classes...</p>
+            <p style={{ marginTop: "5px" }}>Loading your classes...</p>
           </div>
         ) : (
           <div className={styles["dashboard-body"]}>
@@ -192,7 +192,7 @@ const TeacherDashboard = () => {
                           Invitation: {classItem.invitationCode}
                         </p>
                         <p className={styles["student-count"]}>
-                          {classItem.studentCount || 0} Students
+                          {classItem.students.length || 0} Students
                         </p>
                       </div>
                       <button className={styles["view-btn"]}>
