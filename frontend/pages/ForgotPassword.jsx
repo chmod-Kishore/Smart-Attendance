@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import image512 from "../assets/logo512.png";
-import { SHA256 } from "crypto-js";
 
 const ForgotPassword = () => {
   // eslint-disable-next-line

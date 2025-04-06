@@ -101,32 +101,35 @@ async function Signup(req, res) {
 async function ForgotPassword(req, res) {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // ✅ Hashing correctly
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    let user = await Student.findOneAndUpdate(
-      { email },
-      { password: hashedPassword }
-    ).exec();
-    if (!user) {
-      user = await Teacher.findOneAndUpdate(
-        { email },
-        { password: hashedPassword }
-      ).exec();
-    }
-
+    // Try updating Student first
+    let user = await Student.findOne({ email });
     if (user) {
-      res.status(200).json({
-        message: "Password updated successfully. You can now log in.",
-      });
+      user.password = hashedPassword;
+      await user.save();
     } else {
-      res.status(404).json({
-        message: "User not found. Please check the email entered.",
-      });
+      // If not student, try Teacher
+      user = await Teacher.findOne({ email });
+      if (user) {
+        user.password = hashedPassword;
+        await user.save();
+      }
     }
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "Password reset successful" });
   } catch (err) {
-    console.error("Error updating password:", err);
-    res.status(500).json({ message: "Server error while resetting password" });
+    console.error("Error resetting password:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 }
 
@@ -211,7 +214,6 @@ const UserController = {
   Login,
   Signup,
   ForgotPassword,
-  EditUserDetails,
   SendMail,
   GetUserDetails, // ✅ Add the new function
 };
