@@ -4,8 +4,7 @@ import nodemailer from "nodemailer";
 import { Student } from "../model/Student.js";
 import { Teacher } from "../model/Teacher.js";
 import JWT from "../middleware/JWT.js";
-import bcrypt, { hash } from "bcryptjs";
-
+import bcrypt from "bcryptjs";
 async function Login(req, res) {
   const { email, password } = req.body;
   let type = "student";
@@ -99,14 +98,11 @@ async function Signup(req, res) {
   }
 }
 
-//change password
-const bcrypt = require("bcryptjs");
-
 async function ForgotPassword(req, res) {
   const { email, password } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10); // ✅ Hashing correctly
 
     let user = await Student.findOneAndUpdate(
       { email },
