@@ -5,6 +5,7 @@ import { Student } from "../model/Student.js";
 import { Teacher } from "../model/Teacher.js";
 import JWT from "../middleware/JWT.js";
 import bcrypt from "bcryptjs";
+
 async function Login(req, res) {
   const { email, password } = req.body;
   let type = "student";
@@ -37,7 +38,6 @@ async function Login(req, res) {
   }
 }
 
-// Create a new user
 async function Signup(req, res) {
   const { name, email, rollNo, dob, branch, dept, password, type } = req.body;
 
@@ -130,25 +130,25 @@ async function ForgotPassword(req, res) {
   }
 }
 
-//edit user details
-async function EditUserDetails(req, res) {
-  const { email, name, dob } = req.body;
-  let user = await Student.findOne
-    .findOneAndUpdate({ email }, { name, dob })
-    .exec();
-  if (!user) {
-    user = await Teacher.findOneAndUpdate
-      .findOneAndUpdate({ email }, { name, dob })
-      .exec();
-  }
-  if (user) {
-    res.status(200).json({ message: "User details updated successfully." });
-  } else {
-    res
-      .status(404)
-      .json({ message: "User not found. Please check the email provided." });
-  }
-}
+// //edit user details
+// async function EditUserDetails(req, res) {
+//   const { email, name, dob } = req.body;
+//   let user = await Student.findOne
+//     .findOneAndUpdate({ email }, { name, dob })
+//     .exec();
+//   if (!user) {
+//     user = await Teacher.findOneAndUpdate
+//       .findOneAndUpdate({ email }, { name, dob })
+//       .exec();
+//   }
+//   if (user) {
+//     res.status(200).json({ message: "User details updated successfully." });
+//   } else {
+//     res
+//       .status(404)
+//       .json({ message: "User not found. Please check the email provided." });
+//   }
+// }
 
 //send mail
 function SendMail(req, res) {
