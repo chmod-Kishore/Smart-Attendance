@@ -106,13 +106,12 @@ async function ForgotPassword(req, res) {
   }
 
   try {
-    // Hash the password before updating
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Hashed password:", hashedPassword);
 
     let user = await Student.findOne({ email });
 
     if (user) {
-      // Update with hashed password
       await Student.updateOne(
         { email },
         { $set: { password: hashedPassword } }
