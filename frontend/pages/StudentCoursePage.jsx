@@ -13,7 +13,7 @@ const StudentCoursePage = () => {
   const [showQRScanner, setShowQRScanner] = useState(false);
   const [attendanceData, setAttendanceData] = useState([]);
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
-
+  const [refreshFlag, setRefreshFlag] = useState(false);
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
@@ -33,7 +33,7 @@ const StudentCoursePage = () => {
     if (storedStudentId) {
       setStudentId(storedStudentId);
     }
-  }, [id]);
+  }, [id, refreshFlag]);
 
   const handleCheckAttendance = (session) => {
     const studentAttendance = session.attendance.find(
@@ -70,19 +70,32 @@ const StudentCoursePage = () => {
       </div>
     );
   }
-  
+
   if (!course) {
     return (
       <div className={styles["empty-state"]}>
         <div className={styles["empty-icon"]}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="8" x2="12" y2="12"></line>
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
         </div>
         <h3>Course Not Found</h3>
-        <p>The course you're looking for doesn't exist or you don't have access to it.</p>
+        <p>
+          The course you're looking for doesn't exist or you don't have access
+          to it.
+        </p>
       </div>
     );
   }
@@ -91,17 +104,29 @@ const StudentCoursePage = () => {
     <div className={styles["dashboard-wrapper"]}>
       <aside className={styles.sidebar}>
         <div className={styles["course-info-sidebar"]}>
-          <span className={styles["course-code-badge"]}>{course.courseCode}</span>
+          <span className={styles["course-code-badge"]}>
+            {course.courseCode}
+          </span>
           <h3>{course.courseName}</h3>
           <div className={styles["invitation-code"]}>
             <p>Instructor: {course.teacherId.name}</p>
           </div>
         </div>
-        
+
         <div className={styles["sidebar-menu"]}>
           <a href="/dashboard" className={styles["menu-item"]}>
             <span className={styles["menu-icon"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
                 <rect x="14" y="14" width="7" height="7"></rect>
@@ -110,20 +135,40 @@ const StudentCoursePage = () => {
             </span>
             <span>Dashboard</span>
           </a>
-          
+
           <a href="/attendance" className={styles["menu-item"]}>
             <span className={styles["menu-icon"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M9 11l3 3L22 4"></path>
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
               </svg>
             </span>
             <span>Attendance</span>
           </a>
-          
+
           <a href="/profile" className={styles["menu-item"]}>
             <span className={styles["menu-icon"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
@@ -137,7 +182,9 @@ const StudentCoursePage = () => {
         <header className={styles["content-header"]}>
           <div className={styles["page-title"]}>
             <h1>Session Details</h1>
-            <p className={styles["welcome-text"]}>View and manage your sessions for this course</p>
+            <p className={styles["welcome-text"]}>
+              View and manage your sessions for this course
+            </p>
           </div>
           <div className={styles["instructor-info"]}>
             Instructor: {course.teacherId.name}
@@ -147,7 +194,18 @@ const StudentCoursePage = () => {
         <div className={styles["dashboard-body"]}>
           <div className={styles.section}>
             <h2 className={styles["section-title"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ marginRight: "8px" }}
+              >
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="16" y1="2" x2="16" y2="6"></line>
                 <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -155,7 +213,7 @@ const StudentCoursePage = () => {
               </svg>
               Available Sessions
             </h2>
-            
+
             {course.sessions.length > 0 ? (
               <div className={styles["table-container"]}>
                 <table className={styles["data-table"]}>
@@ -172,22 +230,27 @@ const StudentCoursePage = () => {
                   <tbody>
                     {course.sessions.map((session) => {
                       const sessionActive = isScannerEnabled(session);
-                      const attendanceStatus = session.attendance.find(
-                        (att) => att.studentId._id === studentId
-                      )?.status || "Not Marked";
-                      
+                      const attendanceStatus =
+                        session.attendance.find(
+                          (att) => att.studentId._id === studentId
+                        )?.status || "Not Marked";
+
                       return (
                         <tr key={session._id}>
                           <td>{new Date(session.date).toLocaleString()}</td>
                           <td>{session.radius}</td>
                           <td>{session.duration}</td>
-                          <td>{new Date(session.expiresAt).toLocaleString()}</td>
                           <td>
-                            <span className={`${styles["status-badge"]} ${
-                              attendanceStatus === "Present" 
-                                ? styles.present 
-                                : styles.absent
-                            }`}>
+                            {new Date(session.expiresAt).toLocaleString()}
+                          </td>
+                          <td>
+                            <span
+                              className={`${styles["status-badge"]} ${
+                                attendanceStatus === "Present"
+                                  ? styles.present
+                                  : styles.absent
+                              }`}
+                            >
                               {attendanceStatus}
                             </span>
                           </td>
@@ -219,7 +282,18 @@ const StudentCoursePage = () => {
               </div>
             ) : (
               <div className={styles["empty-state-mini"]}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '12px' }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ marginBottom: "12px" }}
+                >
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                   <line x1="16" y1="2" x2="16" y2="6"></line>
                   <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -238,9 +312,15 @@ const StudentCoursePage = () => {
           <div className={styles["modal-content"]}>
             <h2>Attendance Status</h2>
             <div className={styles["student-info"]}>
-              <p><strong>Name:</strong> {attendanceData.name}</p>
-              <p><strong>Roll No:</strong> {attendanceData.rollNo}</p>
-              <p><strong>Status:</strong> {attendanceData.status}</p>
+              <p>
+                <strong>Name:</strong> {attendanceData.name}
+              </p>
+              <p>
+                <strong>Roll No:</strong> {attendanceData.rollNo}
+              </p>
+              <p>
+                <strong>Status:</strong> {attendanceData.status}
+              </p>
             </div>
             <div className={styles["modal-actions"]}>
               <button
@@ -259,7 +339,14 @@ const StudentCoursePage = () => {
         <div className={styles.modal}>
           <div className={styles["modal-content"]}>
             <h2>Scan QR Code</h2>
-            <QRScanner sessionId={sessionId} studentId={studentId} />
+            <QRScanner
+              sessionId={sessionId}
+              studentId={studentId}
+              onSuccess={() => {
+                setShowQRScanner(false);
+                setRefreshFlag((prev) => !prev);
+              }}
+            />
             <div className={styles["modal-actions"]}>
               <button
                 className={styles["cancel-btn"]}
