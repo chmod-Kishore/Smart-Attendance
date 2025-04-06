@@ -3,14 +3,14 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { clientServer } from "../src/config";
 import QRDisplay from "../pages/QRDisplay";
-import "../styles/CourseDetails.css"; // Import styles
+import styles from "../styles/CourseDetails.module.css"; // Changed to module CSS
 
 const CourseDetails = () => {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSessionModal, setShowSessionModal] = useState(false);
-  const [showSessions, setShowSessions] = useState(false); // ✅ Corrected toggle
+  const [showSessions, setShowSessions] = useState(false);
   const [sessionDetails, setSessionDetails] = useState({
     courseId: "",
     latitude: "",
@@ -39,13 +39,16 @@ const CourseDetails = () => {
       setLoading(false);
     }
   };
+  
   useEffect(() => {
     fetchCourseDetails();
   }, [id]);
+  
   const handleCheckAttendance = (session) => {
     setAttendanceData(session.attendance);
     setShowAttendanceModal(true);
   };
+  
   const fetchLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -115,128 +118,207 @@ const CourseDetails = () => {
     }
   };
 
-  if (loading) return <h1 className="loading">Loading...</h1>;
-  if (!course) return <h1 className="error">Course Not Found</h1>;
+  if (loading) return (
+    <div className={styles["loading-container"]}>
+      <div className={styles["loading-spinner"]}></div>
+      <p>Loading course details...</p>
+    </div>
+  );
+  
+  if (!course) return (
+    <div className={styles["empty-state"]}>
+      <div className={styles["empty-icon"]}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <h3>Course Not Found</h3>
+      <p>The course you're looking for doesn't exist or you don't have access to it.</p>
+    </div>
+  );
 
   return (
-    <div className="dashboard-container">
-      {/* Sidebar with Create Session Button */}
-      <aside className="sidebar">
-        <h2>ScanMe</h2>
-        <div className="course-sidebar-details">
-          <h3>{course.courseName}</h3>
-          <p>
-            <strong>Course Code:</strong> {course.courseCode}
-          </p>
-          <p>
-            <strong>Invitation Code:</strong> {course.invitationCode}
-          </p>
+    <div className={styles["dashboard-wrapper"]}>
+      {/* Sidebar */}
+      <aside className={styles.sidebar}>
+        <div className={styles["sidebar-menu"]}>
+          <a href="/dashboard" className={styles["menu-item"]}>
+            <span className={styles["menu-icon"]}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </span>
+            <span>Dashboard</span>
+          </a>
+
+          <a href="/attendance" className={styles["menu-item"]}>
+            <span className={styles["menu-icon"]}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </span>
+            <span>Attendance</span>
+          </a>
+
+          <a href="/profile" className={styles["menu-item"]}>
+            <span className={styles["menu-icon"]}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <span>Profile</span>
+          </a>
         </div>
-        <button
-          className="create-session-btn"
-          onClick={() => {
-            fetchLocation(); // ✅ Fetch location before showing modal
-            setSessionDetails((prev) => ({
-              ...prev,
-              courseId: course._id,
-            }));
-            setShowSessionModal(true);
-          }}
-        >
-          Create Session
-        </button>
-        <button
-          className="session-details-btn"
-          onClick={() => {
-            fetchCourseDetails();
-            setShowSessions(!showSessions);
-          }} // ✅ Corrected toggle
-        >
-          {showSessions ? "Hide Session Details" : "Show Session Details"}
-        </button>
+
+        <div className={styles["course-info-sidebar"]}>
+          <h3>{course.courseName}</h3>
+          <div className={styles["course-code-badge"]}>
+            Course Code: {course.courseCode}
+          </div>
+          <div className={styles["invitation-code"]}>
+            Invitation Code: {course.invitationCode}
+          </div>
+        </div>
+
+        <div className={styles["sidebar-footer"]}>
+          <button
+            onClick={() => {
+              fetchLocation();
+              setSessionDetails((prev) => ({
+                ...prev,
+                courseId: course._id,
+              }));
+              setShowSessionModal(true);
+            }}
+            className={styles["create-session-btn"]}
+          >
+            <span className={styles["btn-icon"]}>+</span>
+            <span>Create Session</span>
+          </button>
+          
+          <button
+            className={styles["toggle-sessions-btn"]}
+            onClick={() => {
+              fetchCourseDetails();
+              setShowSessions(!showSessions);
+            }}
+          >
+            {showSessions ? "Hide Sessions" : "Show Sessions"}
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
-      <main className="dashboard-content">
-        <h1 className="course-title">{course.courseName}</h1>
-        <div className="course-info">
-          <p>
-            <strong>Instructor:</strong> {course.teacherId.name}
-          </p>
-        </div>
+      <main className={styles["dashboard-content"]}>
+        <header className={styles["content-header"]}>
+          <div className={styles["page-title"]}>
+            <p className={styles["welcome-text"]}>Course Details</p>
+            <h1>{course.courseName}</h1>
+          </div>
+          <div className={styles["instructor-info"]}>
+            <span>Instructor: {course.teacherId.name}</span>
+          </div>
+        </header>
 
-        {/* Enrolled Students Table */}
-        <h2 className="section-title">Enrolled Students</h2>
-        {course.students.length > 0 ? (
-          <table className="students-table">
-            <thead>
-              <tr>
-                <th className="table-header">Name</th>
-                <th className="table-header">Roll No</th>
-                <th className="table-header">Department</th>
-                <th className="table-header">Branch</th>
-              </tr>
-            </thead>
-            <tbody>
-              {course.students.map((student) => (
-                <tr key={student._id} className="student-row">
-                  <td className="student-data">{student.name}</td>
-                  <td className="student-data">{student.rollNo}</td>
-                  <td className="student-data">{student.dept}</td>
-                  <td className="student-data">{student.branch}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="no-students">No students enrolled yet.</p>
-        )}
-        {showSessions && (
-          <div className="session-details">
-            <h2>Session Details</h2>
-            {course.sessions.length > 0 ? (
-              <table className="sessions-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Radius (m)</th>
-                    <th>Duration (mins)</th>
-                    <th>Expires At</th>
-                    <th>Attendance</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {course.sessions.map((session) => (
-                    <tr key={session._id}>
-                      <td>{new Date(session.date).toLocaleString()}</td>
-                      <td>{session.radius}</td>
-                      <td>{session.duration}</td>
-                      <td>{new Date(session.expiresAt).toLocaleString()}</td>
-                      <td>{session.attendance.length} students</td>
-                      <td>
-                        <button onClick={() => handleCheckAttendance(session)}>
-                          Check Attendance
-                        </button>
-                      </td>
+        <div className={styles["dashboard-body"]}>
+          {/* Enrolled Students */}
+          <div className={styles["section"]}>
+            <h2 className={styles["section-title"]}>Enrolled Students</h2>
+            {course.students.length > 0 ? (
+              <div className={styles["table-container"]}>
+                <table className={styles["data-table"]}>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Roll No</th>
+                      <th>Department</th>
+                      <th>Branch</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {course.students.map((student) => (
+                      <tr key={student._id}>
+                        <td>{student.name}</td>
+                        <td>{student.rollNo}</td>
+                        <td>{student.dept}</td>
+                        <td>{student.branch}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <p>No sessions available yet.</p>
+              <div className={styles["empty-state-mini"]}>
+                <p>No students enrolled yet.</p>
+              </div>
             )}
           </div>
-        )}
+
+          {/* Session Details (conditionally displayed) */}
+          {showSessions && (
+            <div className={styles["section"]}>
+              <h2 className={styles["section-title"]}>Session Details</h2>
+              {course.sessions.length > 0 ? (
+                <div className={styles["table-container"]}>
+                  <table className={styles["data-table"]}>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Radius (m)</th>
+                        <th>Duration (mins)</th>
+                        <th>Expires At</th>
+                        <th>Attendance</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {course.sessions.map((session) => (
+                        <tr key={session._id}>
+                          <td>{new Date(session.date).toLocaleString()}</td>
+                          <td>{session.radius}</td>
+                          <td>{session.duration}</td>
+                          <td>{new Date(session.expiresAt).toLocaleString()}</td>
+                          <td>{session.attendance.length} students</td>
+                          <td>
+                            <button 
+                              className={styles["action-btn"]}
+                              onClick={() => handleCheckAttendance(session)}
+                            >
+                              View
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className={styles["empty-state-mini"]}>
+                  <p>No sessions available yet.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </main>
+
+      {/* Session Modal */}
       {showSessionModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
             <h2>Create New Session</h2>
-            <p>Course ID: {sessionDetails.courseId}</p>
+            <p>Setting up attendance session for {course.courseName}</p>
+            
             <input
               type="text"
-              className="input-field"
+              className={styles["code-input"]}
               placeholder="Session Duration (minutes)"
               value={sessionDetails.duration}
               onChange={(e) =>
@@ -246,9 +328,10 @@ const CourseDetails = () => {
                 }))
               }
             />
+            
             <input
               type="number"
-              className="input-field"
+              className={styles["code-input"]}
               placeholder="Enter Radius (meters)"
               value={sessionDetails.radius}
               onChange={(e) =>
@@ -258,111 +341,147 @@ const CourseDetails = () => {
                 }))
               }
             />
-            <p className="location-info">
-              Latitude: {sessionDetails.latitude || "Fetching..."}
-            </p>
-            <p className="location-info">
-              Longitude: {sessionDetails.longitude || "Fetching..."}
-            </p>
-            <button className="modal-btn" onClick={handleCreateSession}>
-              Create
-            </button>
-            <button
-              className="modal-btn cancel"
-              onClick={() => setShowSessionModal(false)}
-            >
-              Cancel
-            </button>
+            
+            <div className={styles["location-info"]}>
+              <div>Latitude: {sessionDetails.latitude || "Fetching..."}</div>
+              <div>Longitude: {sessionDetails.longitude || "Fetching..."}</div>
+            </div>
+            
+            <div className={styles["modal-actions"]}>
+              <button
+                className={styles["cancel-btn"]}
+                onClick={() => setShowSessionModal(false)}
+              >
+                Cancel
+              </button>
+              <button className={styles["join-btn"]} onClick={handleCreateSession}>
+                Create Session
+              </button>
+            </div>
           </div>
         </div>
       )}
+
+      {/* Attendance Modal */}
       {showAttendanceModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
             <h2>Attendance Details</h2>
+            
             {attendanceData.length > 0 ? (
-              <table className="attendance-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Roll No</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {attendanceData.map((att) => (
-                    <tr key={att.studentId._id}>
-                      <td>{att.studentId.name}</td>
-                      <td>{att.studentId.rollNo}</td>
-                      <td>{att.status}</td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            setSelectedStudent(att.studentId);
-                            setSelectedSessionId(
-                              course.sessions.find((s) =>
-                                s.attendance.some(
-                                  (a) => a.studentId._id === att.studentId._id
-                                )
-                              )._id
-                            );
-                            setShowUpdateAttendanceModal(true);
-                          }}
-                        >
-                          Update Status
-                        </button>
-                      </td>
+              <div className={styles["table-container"]}>
+                <table className={styles["data-table"]}>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Roll No</th>
+                      <th>Status</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {attendanceData.map((att) => (
+                      <tr key={att.studentId._id}>
+                        <td>{att.studentId.name}</td>
+                        <td>{att.studentId.rollNo}</td>
+                        <td>
+                          <span className={`${styles["status-badge"]} ${styles[att.status.toLowerCase()]}`}>
+                            {att.status}
+                          </span>
+                        </td>
+                        <td>
+                          <button
+                            className={styles["action-btn"]}
+                            onClick={() => {
+                              setSelectedStudent(att.studentId);
+                              setSelectedSessionId(
+                                course.sessions.find((s) =>
+                                  s.attendance.some(
+                                    (a) => a.studentId._id === att.studentId._id
+                                  )
+                                )._id
+                              );
+                              setShowUpdateAttendanceModal(true);
+                            }}
+                          >
+                            Update
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p>No attendance records available.</p>
             )}
-            <button
-              className="modal-btn"
-              onClick={() => setShowAttendanceModal(false)}
-            >
-              Close
-            </button>
+            
+            <div className={styles["modal-actions"]}>
+              <button
+                className={styles["join-btn"]}
+                onClick={() => setShowAttendanceModal(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
+
+      {/* Update Attendance Modal */}
       {showUpdateAttendanceModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
             <h2>Update Attendance Status</h2>
-            <p>
-              Student: {selectedStudent?.name} ({selectedStudent?.rollNo})
-            </p>
+            
+            <div className={styles["student-info"]}>
+              <p>Student: {selectedStudent?.name} ({selectedStudent?.rollNo})</p>
+            </div>
+            
             <select
+              className={styles["status-select"]}
               value={newStatus}
               onChange={(e) => setNewStatus(e.target.value)}
             >
               <option value="Present">Present</option>
               <option value="Absent">Absent</option>
             </select>
-            <button className="modal-btn" onClick={handleUpdateAttendance}>
-              Update
-            </button>
-            <button
-              className="modal-btn cancel"
-              onClick={() => setShowUpdateAttendanceModal(false)}
-            >
-              Cancel
-            </button>
+            
+            <div className={styles["modal-actions"]}>
+              <button
+                className={styles["cancel-btn"]}
+                onClick={() => setShowUpdateAttendanceModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className={styles["join-btn"]} 
+                onClick={handleUpdateAttendance}
+              >
+                Update Status
+              </button>
+            </div>
           </div>
         </div>
       )}
+
+      {/* QR Code Modal */}
       {showQR && sessionId && (
-        <div className="qr-modal">
-          <div className="modal-content">
-            <h2>Session QR Code</h2>
-            <QRDisplay sessionId={sessionId} />
-            <button className="modal-btn" onClick={() => setShowQR(false)}>
-              Close
-            </button>
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
+            <h2>Attendance QR Code</h2>
+            <div className={styles["qr-container"]}>
+              <QRDisplay sessionId={sessionId} />
+            </div>
+            <p>Have students scan this QR code to mark attendance</p>
+            <div className={styles["modal-actions"]}>
+              <button 
+                className={styles["join-btn"]} 
+                onClick={() => setShowQR(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

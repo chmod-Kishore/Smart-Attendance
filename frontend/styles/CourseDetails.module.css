@@ -1,0 +1,521 @@
+/* CourseDetails.module.css - Matching student dashboard theme */
+
+/* Base styles to match StudentDashboard */
+.dashboard-wrapper {
+  display: flex;
+  background-color: #1c2032;
+  color: #eaeaea;
+  min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: #141824;
+  width: 250px;
+  min-width: 250px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 5;
+  transition: width 0.3s ease;
+  padding-top: 20px;
+}
+
+.sidebar-menu {
+  padding: 24px 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #a0a3bd;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  margin: 4px 0;
+}
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.menu-item.active {
+  background-color: rgba(0, 200, 83, 0.1);
+  color: #00c853;
+  border-left: 3px solid #00c853;
+}
+
+.menu-icon {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+/* Course Info in Sidebar */
+.course-info-sidebar {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.course-info-sidebar h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  color: #f0f0f0;
+}
+
+.course-code-badge {
+  background-color: rgba(0, 200, 83, 0.1);
+  color: #00c853;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.invitation-code {
+  color: #a0a3bd;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* Sidebar Footer and Buttons */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.create-session-btn, .join-btn {
+  background-color: #00c853;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-session-btn:hover, .join-btn:hover {
+  background-color: #00b34c;
+}
+
+.toggle-sessions-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #eaeaea;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+.toggle-sessions-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-icon {
+  margin-right: 8px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Main Content Area */
+.dashboard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.content-header {
+  padding: 24px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-title h1 {
+  font-size: 28px;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #f0f0f0;
+}
+
+.welcome-text {
+  margin: 0;
+  color: #a0a3bd;
+  font-size: 14px;
+}
+
+.instructor-info {
+  color: #a0a3bd;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+/* Dashboard Body */
+.dashboard-body {
+  padding: 30px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #f0f0f0;
+  display: flex;
+  align-items: center;
+}
+
+/* Table Styles */
+.table-container {
+  background-color: #1f2438;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th {
+  background-color: #141824;
+  padding: 14px 16px;
+  font-weight: 600;
+  color: #f0f0f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.data-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #eaeaea;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Action Button */
+.action-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.action-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.present {
+  background-color: rgba(0, 200, 83, 0.1);
+  color: #00c853;
+}
+
+.absent {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #a0a3bd;
+  text-align: center;
+  height: 100%;
+}
+
+.empty-state-mini {
+  background-color: #1f2438;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  color: #a0a3bd;
+}
+
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: #566180;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  margin: 0 0 12px 0;
+  color: #eaeaea;
+}
+
+.empty-state p {
+  margin: 0 0 24px 0;
+  color: #a0a3bd;
+  max-width: 300px;
+}
+
+/* Loading Spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #a0a3bd;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid #00c853;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(18, 21, 33, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background-color: #1f2438;
+  color: white;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin: 0 0 16px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #f0f0f0;
+}
+
+.modal-content p {
+  margin: 0 0 24px 0;
+  color: #a0a3bd;
+  font-size: 15px;
+}
+
+.code-input {
+  width: 100%;
+  background-color: #141824;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.code-input:focus {
+  border-color: #00c853;
+  box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.2);
+}
+
+.status-select {
+  width: 100%;
+  background-color: #141824;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin: 20px 0;
+  outline: none;
+}
+
+.location-info {
+  background-color: #141824;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 24px;
+  color: #a0a3bd;
+  font-size: 14px;
+}
+
+.location-info div {
+  margin-bottom: 6px;
+}
+
+.student-info {
+  background-color: #141824;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 8px;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: #eaeaea;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* QR Container */
+.qr-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px auto;
+  width: fit-content;
+}
+
+/* Join Empty Button - Added missing style */
+.join-empty-btn {
+  background-color: #00c853;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 20px;
+}
+
+.join-empty-btn:hover {
+  background-color: #00b34c;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    padding-top: 10px;
+  }
+  
+  .sidebar-menu {
+    padding: 12px 0;
+  }
+  
+  .content-header {
+    padding: 16px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .instructor-info {
+    margin-top: 10px;
+  }
+  
+  .dashboard-body {
+    padding: 15px;
+  }
+  
+  .code-input, .status-select {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+    width: 95%;
+  }
+  
+  .section-title {
+    font-size: 18px;
+  }
+  
+  .data-table th, .data-table td {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .empty-state {
+    padding: 30px 15px;
+  }
+}
