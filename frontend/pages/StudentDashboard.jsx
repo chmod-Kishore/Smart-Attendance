@@ -26,6 +26,8 @@ const StudentDashboard = () => {
           localStorage.setItem("id", res.data.user._id);
           setStudentId(res.data.user._id);
           setUserName(res.data.user.name || userEmail.split("@")[0]);
+          // Store name in localStorage for Nav component
+          localStorage.setItem("name", res.data.user.name || userEmail.split("@")[0]);
         }
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -97,13 +99,6 @@ const StudentDashboard = () => {
   return (
     <div className={styles["dashboard-wrapper"]}>
       <aside className={styles.sidebar}>
-        <div className={styles["logo-container"]}>
-          <div className={styles.logo}>
-            <img src="/logo.png" alt="ScanMe Logo" className={styles["logo-img"]} />
-          </div>
-          <h2>ScanMe</h2>
-        </div>
-        
         <div className={styles["sidebar-menu"]}>
           <a href="/dashboard" className={`${styles["menu-item"]} ${styles.active}`}>
             <span className={styles["menu-icon"]}>
@@ -154,33 +149,6 @@ const StudentDashboard = () => {
           <div className={styles["page-title"]}>
             <h1>Your Classes</h1>
             <p className={styles["welcome-text"]}>Welcome back, {userName}!</p>
-          </div>
-          
-          <div className={styles["header-actions"]}>
-            <div className={styles["search-box"]}>
-              <input 
-                type="text" 
-                placeholder="Search classes..." 
-                className={styles["search-input"]}
-              />
-              <span className={styles["search-icon"]}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-              </span>
-            </div>
-            
-            <button className={styles["scan-btn"]}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-                <rect x="7" y="7" width="10" height="10" rx="2"></rect>
-              </svg>
-              Scan QR
-            </button>
           </div>
         </header>
         

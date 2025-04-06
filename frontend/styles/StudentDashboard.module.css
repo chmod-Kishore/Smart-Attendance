@@ -1,549 +1,453 @@
-  /* Remove the global nav hiding rule and adjust spacing */
-  /* Typography */
-  body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    /* Account for the global nav height */
-    padding-top: 60px;
-  }
+/* Modified Dashboard CSS to work with Global Nav */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  /* Account for the global nav height */
+  padding-top: 60px;
+}
 
-  /* Container and sidebar */
+/* Container and sidebar */
+.dashboard-wrapper {
+  display: flex;
+  background-color: #1c2032;
+  color: #eaeaea;
+  min-height: calc(100vh - 60px); /* Subtract nav height */
+}
+
+.sidebar {
+  background-color: #141824;
+  width: 250px;
+  min-width: 250px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 5; /* Lower z-index than global nav */
+  transition: width 0.3s ease;
+  padding-top: 20px;
+}
+
+/* Remove logo container from sidebar since it's in the nav now */
+.sidebar-menu {
+  flex: 1;
+  padding: 24px 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #a0a3bd;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  margin: 4px 0;
+}
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.menu-item.active {
+  background-color: rgba(0, 200, 83, 0.1);
+  color: #00c853;
+  border-left: 3px solid #00c853;
+}
+
+.menu-icon {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.join-btn {
+  background-color: #00c853;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon {
+  margin-right: 8px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.join-btn:hover {
+  background-color: #00b34c;
+}
+
+/* Content Area */
+.dashboard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.content-header {
+  padding: 24px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-title h1 {
+  font-size: 28px;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #f0f0f0;
+}
+
+.welcome-text {
+  margin: 0;
+  color: #a0a3bd;
+  font-size: 14px;
+}
+
+/* Remove header actions since they're in the nav now */
+.dashboard-body {
+  padding: 30px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #a0a3bd;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid #00c853;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #a0a3bd;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: #566180;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  margin: 0 0 12px 0;
+  color: #eaeaea;
+}
+
+.empty-state p {
+  margin: 0 0 24px 0;
+  color: #a0a3bd;
+  max-width: 300px;
+}
+
+.join-empty-btn {
+  background-color: #00c853;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.join-empty-btn:hover {
+  background-color: #00b34c;
+}
+
+/* Grid of courses */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* Course card styling */
+.course-card {
+  background-color: #1f2438;
+  color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 220px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.course-color-indicator {
+  height: 6px;
+  background-color: #00c853;
+  width: 100%;
+}
+
+.course-content {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card h3 {
+  font-size: 22px;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.course-code {
+  font-size: 14px;
+  color: #a0a3bd;
+  margin: 0 0 16px 0;
+}
+
+.course-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.instructor-name {
+  color: #a0a3bd;
+  margin: 0;
+}
+
+.attendance-stat {
+  color: #00c853;
+  font-weight: 600;
+  margin: 0;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 16px rgba(0, 0, 0, 0.2);
+}
+
+.add-class-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-class-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #a0a3bd;
+}
+
+.add-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 16px;
+  color: #eaeaea;
+}
+
+.add-class-card:hover {
+  border-color: #00c853;
+  background-color: rgba(0, 200, 83, 0.05);
+}
+
+.add-class-card:hover .add-icon {
+  background-color: rgba(0, 200, 83, 0.2);
+  color: #00c853;
+}
+
+/* View button inside card */
+.view-btn {
+  margin-top: auto;
+  background-color: #2d3348;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.view-btn:hover {
+  background-color: #3b82f6;
+}
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(18, 21, 33, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background-color: #1f2438;
+  color: white;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin: 0 0 16px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #f0f0f0;
+}
+
+.modal-content p {
+  margin: 0 0 24px 0;
+  color: #a0a3bd;
+  font-size: 15px;
+}
+
+.code-input {
+  width: 100%;
+  background-color: #141824;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 24px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.code-input:focus {
+  border-color: #00c853;
+  box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.2);
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: #eaeaea;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .dashboard-wrapper {
-    display: flex;
-    background-color: #1c2032;
-    color: #eaeaea;
-    min-height: calc(100vh - 60px); /* Subtract nav height */
+    flex-direction: column;
   }
-
+  
   .sidebar {
-    background-color: #141824;
-    width: 250px;
-    min-width: 250px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    z-index: 5; /* Lower z-index than global nav */
-    transition: width 0.3s ease;
-  }
-
-  .logo-container {
-    display: flex;
-    align-items: center;
-    padding: 24px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .logo {
-    width: 36px;
-    height: 36px;
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background-color: #00c853;
-    overflow: hidden;
-  }
-
-  .logo-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    min-width: 100%;
+    padding-top: 0;
   }
-
-  .sidebar h2 {
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0;
-    color: #ffffff;
-  }
-
+  
   .sidebar-menu {
-    flex: 1;
-    padding: 24px 0;
+    padding: 12px 0;
   }
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    color: #a0a3bd;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border-left: 3px solid transparent;
-    margin: 4px 0;
-  }
-
-  .menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-  }
-
-  .menu-item.active {
-    background-color: rgba(0, 200, 83, 0.1);
-    color: #00c853;
-    border-left: 3px solid #00c853;
-  }
-
-  .menu-icon {
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-  }
-
-  .sidebar-footer {
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .join-btn {
-    background-color: #00c853;
-    border: none;
-    padding: 12px 16px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .btn-icon {
-    margin-right: 8px;
-    font-size: 18px;
-    line-height: 1;
-  }
-
-  .join-btn:hover {
-    background-color: #00b34c;
-  }
-
-  /* Content Area */
-  .dashboard-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  .content-header {
-    padding: 24px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .page-title h1 {
-    font-size: 28px;
-    margin: 0 0 8px 0;
-    font-weight: 700;
-    color: #f0f0f0;
-  }
-
-  .welcome-text {
-    margin: 0;
-    color: #a0a3bd;
-    font-size: 14px;
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .search-box {
-    position: relative;
-  }
-
-  .search-input {
-    background-color: #1f2438;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 10px 16px 10px 40px;
-    border-radius: 8px;
-    width: 220px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-
-  .search-input:focus {
-    outline: none;
-    border-color: #00c853;
-    box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.2);
-  }
-
-  .search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #a0a3bd;
-    display: flex;
-    align-items: center;
-  }
-
-  .scan-btn {
-    background-color: #3b82f6;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .scan-btn:hover {
-    background-color: #2563eb;
-  }
-
-  .dashboard-body {
-    padding: 30px;
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  /* Loading state */
-  .loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    color: #a0a3bd;
-  }
-
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-top: 3px solid #00c853;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 16px;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  /* Empty state */
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    color: #a0a3bd;
-    text-align: center;
-  }
-
-  .empty-icon {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 24px;
-    color: #566180;
-  }
-
-  .empty-state h3 {
-    font-size: 20px;
-    margin: 0 0 12px 0;
-    color: #eaeaea;
-  }
-
-  .empty-state p {
-    margin: 0 0 24px 0;
-    color: #a0a3bd;
-    max-width: 300px;
-  }
-
-  .join-empty-btn {
-    background-color: #00c853;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-
-  .join-empty-btn:hover {
-    background-color: #00b34c;
-  }
-
-  /* Grid of courses */
+  
   .course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
-
-  /* Course card styling */
-  .course-card {
-    background-color: #1f2438;
-    color: white;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    height: 220px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .course-color-indicator {
-    height: 6px;
-    background-color: #00c853;
-    width: 100%;
-  }
-
-  .course-content {
-    padding: 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .course-card h3 {
-    font-size: 22px;
-    margin: 0 0 10px 0;
-    font-weight: 600;
-  }
-
-  .course-code {
-    font-size: 14px;
-    color: #a0a3bd;
-    margin: 0 0 16px 0;
-  }
-
-  .course-details {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    font-size: 13px;
-  }
-
-  .instructor-name {
-    color: #a0a3bd;
-    margin: 0;
-  }
-
-  .attendance-stat {
-    color: #00c853;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .course-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  .add-class-card {
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .add-class-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #a0a3bd;
-  }
-
-  .add-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    margin-bottom: 16px;
-    color: #eaeaea;
-  }
-
-  .add-class-card:hover {
-    border-color: #00c853;
-    background-color: rgba(0, 200, 83, 0.05);
-  }
-
-  .add-class-card:hover .add-icon {
-    background-color: rgba(0, 200, 83, 0.2);
-    color: #00c853;
-  }
-
-  /* View button inside card */
-  .view-btn {
-    margin-top: auto;
-    background-color: #2d3348;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    width: 100%;
-    text-align: center;
-  }
-
-  .view-btn:hover {
-    background-color: #3b82f6;
-  }
-
-  /* Modal styling */
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(18, 21, 33, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-  }
-
+  
   .modal-content {
-    background-color: #1f2438;
-    color: white;
-    padding: 30px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 90%;
-    max-width: 440px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    padding: 20px;
   }
+}
 
-  .modal-content h2 {
+@media (max-width: 480px) {
+  .content-header {
+    padding: 16px;
+  }
+  
+  .dashboard-body {
+    padding: 16px;
+  }
+  
+  .page-title h1 {
     font-size: 24px;
-    margin: 0;
   }
-
-  .modal-content p {
-    margin: 0;
-    color: #a0a3bd;
+  
+  .course-grid {
+    grid-template-columns: 1fr;
   }
-
-  .code-input {
-    background-color: #141824;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 14px;
-    border-radius: 8px;
-    font-size: 16px;
-    letter-spacing: 1px;
-  }
-
-  .code-input:focus {
-    outline: none;
-    border-color: #00c853;
-    box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.2);
-  }
-
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 16px;
-    margin-top: 10px;
-  }
-
-  .join-btn {
-    background-color: #00c853;
-    border: none;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s ease;
-  }
-
-  .join-btn:hover {
-    background-color: #00b34c;
-  }
-
-  .cancel-btn {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .cancel-btn:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  /* Responsive adjustments - account for both navbars */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 80px;
-      min-width: 80px;
-    }
-    
-    .logo-container {
-      justify-content: center;
-      padding: 20px 10px;
-    }
-    
-    .sidebar h2, 
-    .menu-item span:not(.menu-icon),
-    .btn-icon + span {
-      display: none;
-    }
-    
-    .menu-item {
-      justify-content: center;
-      padding: 14px 0;
-    }
-    
-    .menu-icon {
-      margin-right: 0;
-    }
-    
-    .content-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-    }
-    
-    .header-actions {
-      width: 100%;
-    }
-    
-    .search-input {
-      width: 100%;
-    }
-  }
+}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Nav.css";
-import Person4Icon from "@mui/icons-material/Person4"; // User Icon
-import LogoutIcon from "@mui/icons-material/Logout"; // Logout Icon
+import Person4Icon from "@mui/icons-material/Person4";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("email"));
@@ -34,7 +34,9 @@ const Nav = () => {
         {/* Logo and Title */}
         <div className="logo-container">
           <a href="/">
-            <img className="logo" src="/logo.webp" alt="QR Scan Logo" />
+            <div className="logo">
+              <img src="/logo.png" alt="ScanMe Logo" className="logo-img" />
+            </div>
           </a>
           <span className="logo-text">ScanMe</span>
         </div>
@@ -42,10 +44,25 @@ const Nav = () => {
         {/* Show Profile & Logout Icons Only If Logged In */}
         {isLoggedIn && userDetails && (
           <div className="icons-container">
-            {/* Profile Icon */}
+            {/* Search Box */}
+            <div className="search-box">
+              <input 
+                type="text" 
+                placeholder="Search classes..." 
+                className="search-input"
+              />
+              <span className="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </span>
+            </div>
+
+            {/* Profile Icon with Dropdown */}
             <div className="profile-container">
-              <div className="icon-wrapper" onClick={toggleMenu}>
-                <Person4Icon fontSize="large" className="person" />
+              <div className="icon-wrapper user-icon" onClick={toggleMenu}>
+                <Person4Icon className="person" />
               </div>
 
               {/* Dropdown Menu */}
@@ -63,7 +80,7 @@ const Nav = () => {
               className="logout-container"
               onClick={() => navigate("/logout")}
             >
-              <LogoutIcon fontSize="large" />
+              <LogoutIcon />
             </div>
           </div>
         )}
