@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { clientServer } from "../src/config";
-import "../styles/StudentCoursePage.css";
+import styles from "../styles/StudentCoursePage.module.css"; // Changed to module CSS
 import QRScanner from "../pages/QRScanner";
 
 const StudentCoursePage = () => {
@@ -63,105 +62,215 @@ const StudentCoursePage = () => {
     return now >= sessionStart && now <= sessionEnd;
   };
 
-  if (loading) return <h1>Loading...</h1>;
-  if (!course) return <h1>Course Not Found</h1>;
+  if (loading) {
+    return (
+      <div className={styles["loading-container"]}>
+        <div className={styles["loading-spinner"]}></div>
+        <p>Loading course details...</p>
+      </div>
+    );
+  }
+  
+  if (!course) {
+    return (
+      <div className={styles["empty-state"]}>
+        <div className={styles["empty-icon"]}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h3>Course Not Found</h3>
+        <p>The course you're looking for doesn't exist or you don't have access to it.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="course-container">
-      <div className="course-details">
-        <h1>{course.courseName}</h1>
-        <p>
-          <strong>Instructor:</strong> {course.teacherId.name}
-        </p>
-        <p>
-          <strong>Course Code:</strong> {course.courseCode}
-        </p>
+    <div className={styles["dashboard-wrapper"]}>
+      <aside className={styles.sidebar}>
+        <div className={styles["course-info-sidebar"]}>
+          <span className={styles["course-code-badge"]}>{course.courseCode}</span>
+          <h3>{course.courseName}</h3>
+          <div className={styles["invitation-code"]}>
+            <p>Instructor: {course.teacherId.name}</p>
+          </div>
+        </div>
+        
+        <div className={styles["sidebar-menu"]}>
+          <a href="/dashboard" className={styles["menu-item"]}>
+            <span className={styles["menu-icon"]}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </span>
+            <span>Dashboard</span>
+          </a>
+          
+          <a href="/attendance" className={styles["menu-item"]}>
+            <span className={styles["menu-icon"]}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </span>
+            <span>Attendance</span>
+          </a>
+          
+          <a href="/profile" className={styles["menu-item"]}>
+            <span className={styles["menu-icon"]}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <span>Profile</span>
+          </a>
+        </div>
+      </aside>
 
-        {/* Session Table */}
-        <h2>Session Details</h2>
-        {course.sessions.length > 0 ? (
-          <table className="sessions-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Radius (m)</th>
-                <th>Duration (mins)</th>
-                <th>Expires At</th>
-                <th>Status</th>
-                <th>Mark Attendance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {course.sessions.map((session) => (
-                <tr key={session._id}>
-                  <td>{new Date(session.date).toLocaleString()}</td>
-                  <td>{session.radius}</td>
-                  <td>{session.duration}</td>
-                  <td>{new Date(session.expiresAt).toLocaleString()}</td>
-                  <td>
-                    {session.attendance.find(
-                      (att) => att.studentId._id === studentId
-                    )?.status || "Not Marked"}
-                  </td>
-                  <td>
-                    <button
-                      disabled={!isScannerEnabled(session)}
-                      onClick={() => {
-                        setSessionId(session._id);
-                        setShowQRScanner(true);
-                      }}
-                    >
-                      📷
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>No sessions available yet.</p>
-        )}
+      <main className={styles["dashboard-content"]}>
+        <header className={styles["content-header"]}>
+          <div className={styles["page-title"]}>
+            <h1>Session Details</h1>
+            <p className={styles["welcome-text"]}>View and manage your sessions for this course</p>
+          </div>
+          <div className={styles["instructor-info"]}>
+            Instructor: {course.teacherId.name}
+          </div>
+        </header>
 
-        {/* Attendance Modal */}
-        {showAttendanceModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h2>Attendance Status</h2>
-              <p>
-                <strong>Name:</strong> {attendanceData.name}
-              </p>
-              <p>
-                <strong>Roll No:</strong> {attendanceData.rollNo}
-              </p>
-              <p>
-                <strong>Status:</strong> {attendanceData.status}
-              </p>
+        <div className={styles["dashboard-body"]}>
+          <div className={styles.section}>
+            <h2 className={styles["section-title"]}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}>
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              Available Sessions
+            </h2>
+            
+            {course.sessions.length > 0 ? (
+              <div className={styles["table-container"]}>
+                <table className={styles["data-table"]}>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Radius (m)</th>
+                      <th>Duration (mins)</th>
+                      <th>Expires At</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {course.sessions.map((session) => {
+                      const sessionActive = isScannerEnabled(session);
+                      const attendanceStatus = session.attendance.find(
+                        (att) => att.studentId._id === studentId
+                      )?.status || "Not Marked";
+                      
+                      return (
+                        <tr key={session._id}>
+                          <td>{new Date(session.date).toLocaleString()}</td>
+                          <td>{session.radius}</td>
+                          <td>{session.duration}</td>
+                          <td>{new Date(session.expiresAt).toLocaleString()}</td>
+                          <td>
+                            <span className={`${styles["status-badge"]} ${
+                              attendanceStatus === "Present" 
+                                ? styles.present 
+                                : styles.absent
+                            }`}>
+                              {attendanceStatus}
+                            </span>
+                          </td>
+                          <td>
+                            {sessionActive ? (
+                              <button
+                                className={styles["action-btn"]}
+                                onClick={() => {
+                                  setSessionId(session._id);
+                                  setShowQRScanner(true);
+                                }}
+                              >
+                                Scan QR
+                              </button>
+                            ) : (
+                              <button
+                                className={`${styles["action-btn"]} ${styles["inactive-btn"]}`}
+                                disabled
+                              >
+                                Scan QR
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className={styles["empty-state-mini"]}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '12px' }}>
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <p>No sessions available yet.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* Attendance Modal */}
+      {showAttendanceModal && (
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
+            <h2>Attendance Status</h2>
+            <div className={styles["student-info"]}>
+              <p><strong>Name:</strong> {attendanceData.name}</p>
+              <p><strong>Roll No:</strong> {attendanceData.rollNo}</p>
+              <p><strong>Status:</strong> {attendanceData.status}</p>
+            </div>
+            <div className={styles["modal-actions"]}>
               <button
-                className="modal-btn"
+                className={styles["cancel-btn"]}
                 onClick={() => setShowAttendanceModal(false)}
               >
                 Close
               </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* QR Scanner Modal */}
-        {showQRScanner && (
-          <div className="qr-modal">
-            <div className="modal-content">
-              <h2>Scan QR Code</h2>
-              <QRScanner sessionId={sessionId} studentId={studentId} />
+      {/* QR Scanner Modal */}
+      {showQRScanner && (
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
+            <h2>Scan QR Code</h2>
+            <QRScanner sessionId={sessionId} studentId={studentId} />
+            <div className={styles["modal-actions"]}>
               <button
-                className="modal-btn"
+                className={styles["cancel-btn"]}
                 onClick={() => setShowQRScanner(false)}
               >
                 Close
               </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
