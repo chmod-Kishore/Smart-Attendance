@@ -1,18 +1,17 @@
-/* Navbar Styling */
-/* Removed white background from the navbar and made it transparent */
+/* Navbar Styling - Matching StudentDashboard Dark Theme */
 .nav-container {
   width: 100%;
-  background: transparent; /* Removed white background */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  background: #141824; /* Dark background to match dashboard */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 10px 20px;
+  padding: 0 20px;
+  height: 60px;
 }
 
-/* Adjusted body padding to account for transparent navbar */
 body {
   padding-top: 60px;
 }
@@ -20,47 +19,85 @@ body {
 /* Align items properly */
 nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* align everything to the left */
   align-items: center;
   height: 60px;
+  gap: 20px; /* spacing between logo and icons */
 }
 
-/* Updated logo styling to blend better with the navbar */
+/* Logo container */
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 15px; /* Increased gap for better spacing */
-  overflow: hidden; /* Prevent content overflow */
+  gap: 15px;
+  overflow: hidden;
 }
 
 .logo {
-  width: 100px; /* Increased size */
-  height: auto; /* Maintain aspect ratio */
-  object-fit: contain; /* Ensure the full image is visible */
-  background-color: transparent; /* Remove any background */
-  padding: 5px; /* Add padding to prevent overflow */
-  box-shadow: none; /* Remove shadow for a cleaner look */
-  transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+  width: 50px;
+  height: 45px;
+  padding: 5px;
+  background-color: transparent;
+  box-shadow: none;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .logo:hover {
-  transform: scale(1.1); /* Slight zoom on hover */
+  transform: scale(1.1);
 }
 
 .logo-text {
   font-size: 1.6rem;
   font-family: "Poppins", sans-serif;
   font-weight: bold;
-  color: #333; /* Ensure text is visible */
-  white-space: nowrap; /* Prevent text wrapping */
+  color: #ffffff;
+  white-space: nowrap;
 }
 
-/* Profile and Logout Icons Container */
+/* Profile and Actions Container */
 .icons-container {
   display: flex;
   align-items: center;
-  gap: 20px; /* Space between icons */
-  padding-right: 20px; /* Ensures icons don’t go off-screen */
+  gap: 16px;
+  margin-right: 28px;
+}
+
+/* Search Box */
+.search-box {
+  position: relative;
+}
+
+.search-input {
+  background-color: #1f2438;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 8px 16px 8px 36px;
+  border-radius: 8px;
+  width: 220px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #00c853;
+  box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0a3bd;
+  display: flex;
+  align-items: center;
 }
 
 /* Profile Icon Wrapper */
@@ -69,20 +106,35 @@ nav {
   display: flex;
   align-items: center;
 }
-.icon-wrapper .person{
-  font-size: 2.8rem;
-}
 
-/* Profile & Logout Icon Styling */
-.icon-wrapper, .logout-container {
+.icon-wrapper,
+.logout-container {
   cursor: pointer;
   padding: 6px;
   border-radius: 50%;
-  transition: background 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
-.icon-wrapper:hover, .logout-container:hover {
-  transform: scale(1.2);
+.icon-wrapper:hover,
+.logout-container:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.user-icon .person {
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+
+.logout-container svg {
+  font-size: 1.5rem;
+  color: #ffffff;
 }
 
 /* Dropdown Menu */
@@ -90,29 +142,80 @@ nav {
   position: absolute;
   top: 50px;
   right: 0;
-  background: white;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  background: #1f2438;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
-  padding: 10px;
-  min-width: 200px;
+  padding: 16px;
+  min-width: 220px;
   z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dropdown-menu p {
   margin: 10px 0;
   cursor: default;
+  color: #eaeaea;
 }
 
+.dropdown-menu .user-name {
+  font-weight: 600;
+  font-size: 16px;
+}
 
+.dropdown-menu .user-email {
+  color: #a0a3bd;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.dropdown-menu .user-dob {
+  color: #a0a3bd;
+  font-size: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+}
 
 /* Responsive Fix for Smaller Screens */
-@media (max-width: 600px) {
-  .logo {
-    width: 40px;
-    height: auto; /* Maintain aspect ratio */
+@media (max-width: 768px) {
+  .search-input {
+    width: 160px;
   }
-  
-  .logo-container {
-    max-width: 150px;
+
+  .nav-container {
+    padding: 0 12px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-box {
+    width: 180px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 6px 12px 6px 30px;
+  }
+
+  .logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .icons-container {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-text {
+    font-size: 1.1rem;
+  }
+
+  .search-input {
+    font-size: 13px;
   }
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Nav.css";
-import Person4Icon from "@mui/icons-material/Person4"; // User Icon
-import LogoutIcon from "@mui/icons-material/Logout"; // Logout Icon
+import Person4Icon from "@mui/icons-material/Person4";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("email"));
@@ -34,17 +34,19 @@ const Nav = () => {
         {/* Logo and Title */}
         <div className="logo-container">
           <a href="/">
-            <img className="logo" src="/logo4.png" alt="QR Scan Logo" />
+            <div className="logo">
+              <img src="/logo3.png" alt="ScanMe Logo" className="logo-img" />
+            </div>
           </a>
         </div>
 
         {/* Show Profile & Logout Icons Only If Logged In */}
         {isLoggedIn && userDetails && (
           <div className="icons-container">
-            {/* Profile Icon */}
+            {/* Profile Icon with Dropdown */}
             <div className="profile-container">
-              <div className="icon-wrapper" onClick={toggleMenu}>
-                <Person4Icon fontSize="large" className="person" />
+              <div className="icon-wrapper user-icon" onClick={toggleMenu}>
+                <Person4Icon className="person" />
               </div>
 
               {/* Dropdown Menu */}
@@ -62,7 +64,7 @@ const Nav = () => {
               className="logout-container"
               onClick={() => navigate("/logout")}
             >
-              <LogoutIcon fontSize="large" />
+              <LogoutIcon />
             </div>
           </div>
         )}

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import About from "./About";
 
 const Landing = () => {
-  const [Tutorial, setTutorial] = React.useState(
+  const [tutorial, setTutorial] = React.useState(
     localStorage.getItem("tutorial") ? false : true
   );
 
@@ -22,11 +22,11 @@ const Landing = () => {
 
   return (
     <div className="landing-main">
-      {Tutorial ? (
+      {tutorial ? (
         <About toggleDone={toggleDone} />
       ) : (
         <div className="landing-main">
-          <h1>AttendX</h1>
+          <h1>ScanMe</h1>
           <p>Hello and welcome!</p>
           <Link to="/login" className="landing-login-button">
             Login
