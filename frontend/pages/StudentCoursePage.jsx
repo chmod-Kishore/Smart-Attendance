@@ -179,8 +179,7 @@ const StudentCoursePage = () => {
                   <thead>
                     <tr>
                       <th>Date</th>
-                      <th>Radius (m)</th>
-                      <th>Duration (mins)</th>
+
                       <th>Expires At</th>
                       <th>Status</th>
                       <th>Action</th>
@@ -197,8 +196,7 @@ const StudentCoursePage = () => {
                       return (
                         <tr key={session._id}>
                           <td>{new Date(session.date).toLocaleString()}</td>
-                          <td>{session.radius}</td>
-                          <td>{session.duration}</td>
+
                           <td>
                             {new Date(session.expiresAt).toLocaleString()}
                           </td>

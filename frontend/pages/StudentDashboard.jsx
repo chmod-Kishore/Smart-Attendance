@@ -120,10 +120,7 @@ const StudentDashboard = () => {
     <div className={styles["dashboard-wrapper"]}>
       <aside className={styles.sidebar}>
         <div className={styles["sidebar-menu"]}>
-          <a
-            href="/dashboard"
-            className={`${styles["menu-item"]} ${styles.active}`}
-          >
+          <p className={`${styles["menu-item"]} ${styles.active}`}>
             <span className={styles["menu-icon"]}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +140,7 @@ const StudentDashboard = () => {
               </svg>
             </span>
             <span>Dashboard</span>
-          </a>
+          </p>
         </div>
 
         <div className={styles["sidebar-footer"]}>

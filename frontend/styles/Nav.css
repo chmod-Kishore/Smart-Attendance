@@ -34,8 +34,8 @@ nav {
 }
 
 .logo {
-  width: 50px;
-  height: 45px;
+  width: 60px;
+  height: 55px;
   padding: 5px;
   background-color: transparent;
   box-shadow: none;
@@ -190,32 +190,6 @@ nav {
   }
 }
 
-@media (max-width: 600px) {
-  .search-box {
-    width: 180px;
-  }
 
-  .search-input {
-    width: 100%;
-    padding: 6px 12px 6px 30px;
-  }
 
-  .logo {
-    width: 32px;
-    height: 32px;
-  }
 
-  .icons-container {
-    gap: 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo-text {
-    font-size: 1.1rem;
-  }
-
-  .search-input {
-    font-size: 13px;
-  }
-}
