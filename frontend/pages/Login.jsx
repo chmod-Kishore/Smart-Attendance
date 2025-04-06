@@ -52,15 +52,15 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      if (localStorage.getItem("type") === "teacher") {
-        navigate("/teacher-dashboard");
-      } else {
-        navigate("/student-dashboard");
-      }
-    }
-  }, [token, navigate]);
+  // useEffect(() => {
+  //   if (token) {
+  //     if (localStorage.getItem("type") === "teacher") {
+  //       navigate("/teacher-dashboard");
+  //     } else {
+  //       navigate("/student-dashboard");
+  //     }
+  //   }
+  // }, [token, navigate]);
 
   return (
     <div className={styles.loginMain}>
@@ -70,16 +70,16 @@ const Login = () => {
             <h2>Welcome back</h2>
             <p>Please enter your details to sign in</p>
           </div>
-          
+
           <form onSubmit={handleLoginSubmit} className={styles.loginForm}>
             <div className={styles.formGroup}>
               <label htmlFor="email">Email</label>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 id="email"
-                name="email" 
-                placeholder="Enter your email" 
-                required 
+                name="email"
+                placeholder="Enter your email"
+                required
               />
             </div>
 
@@ -112,10 +112,13 @@ const Login = () => {
               Sign In
             </button>
           </form>
-          
+
           <div className={styles.loginFooter}>
             <p>
-              Don't have an account? <Link to="/register" className={styles.signupLink}>Sign Up</Link>
+              Don't have an account?{" "}
+              <Link to="/register" className={styles.signupLink}>
+                Sign Up
+              </Link>
             </p>
           </div>
         </div>
