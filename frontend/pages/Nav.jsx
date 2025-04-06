@@ -34,9 +34,8 @@ const Nav = () => {
         {/* Logo and Title */}
         <div className="logo-container">
           <a href="/">
-            <img className="logo" src="/logo.webp" alt="QR Scan Logo" />
+            <img className="logo" src="/logo4.png" alt="QR Scan Logo" />
           </a>
-          <span className="logo-text">ScanMe</span>
         </div>
 
         {/* Show Profile & Logout Icons Only If Logged In */}
