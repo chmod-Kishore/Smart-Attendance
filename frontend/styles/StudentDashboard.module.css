@@ -451,3 +451,46 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Ensure modal has some padding */
+.modal-content {
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #1f2438;
+}
+
+/* Input fields stay inside the modal with proper spacing */
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"],
+.modal-content textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Buttons same width and styling */
+.modal-content .modal-button {
+  width: 100%;
+  max-width: 180px;
+  padding: 10px;
+  margin: 10px auto;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.modal-content .modal-button:hover {
+  background-color: #4338ca;
+  transform: scale(1.03);
+}
