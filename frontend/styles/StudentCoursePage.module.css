@@ -145,10 +145,13 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .data-table {
-  width: 100%;
+  width: 95%;
   border-collapse: collapse;
   text-align: left;
 }
@@ -180,7 +183,7 @@
   background-color: #3b82f6;
   color: white;
   border: none;
-  padding: 8px 14px;
+  padding: 4px 10px;
   border-radius: 6px;
   font-size: 13px;
   cursor: pointer;
