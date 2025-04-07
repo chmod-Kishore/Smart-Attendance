@@ -141,52 +141,65 @@ export default function QRScanner({ sessionId, studentId, onSuccess }) {
   const [facingMode, setFacingMode] = useState("environment");
   const html5QrCodeRef = useRef(null);
 
+  // Ask for camera permission
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: true })
+      .getUserMedia({ video: { facingMode } })
       .then(() => setHasPermission(true))
-      .catch(() => setHasPermission(false));
-  }, []);
+      .catch((err) => {
+        console.error("Camera permission error:", err);
+        setHasPermission(false);
+        setResult("Camera access denied");
+      });
+  }, [facingMode]);
 
+  // Start QR scanner and location access BEFORE scan
   useEffect(() => {
     if (!hasPermission) return;
 
-    const html5QrCode = new Html5Qrcode("qr-reader");
-    html5QrCodeRef.current = html5QrCode;
+    let html5QrCode;
+    let location = null;
 
-    html5QrCode
-      .start(
-        { facingMode },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-        },
-        async (decodedText) => {
-          await html5QrCode.stop();
-          html5QrCode.clear();
-          handleScan(decodedText);
-        },
-        (errorMessage) => {
-          console.warn("QR Error:", errorMessage);
-        }
-      )
-      .catch((err) => {
+    const startScanner = async () => {
+      try {
+        location = await getUserLocation(); // request location BEFORE scan
+
+        html5QrCode = new Html5Qrcode("qr-reader");
+        html5QrCodeRef.current = html5QrCode;
+
+        await html5QrCode.start(
+          { facingMode },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          async (decodedText) => {
+            await html5QrCode.stop();
+            html5QrCode.clear();
+            handleScan(decodedText, location);
+          },
+          (errorMessage) => {
+            console.warn("QR Scan Error:", errorMessage);
+          }
+        );
+      } catch (err) {
         console.error("Start Scan Error:", err);
-        setResult("Failed to start scanner");
-      });
+        setResult("Failed to start scanner or access location");
+      }
+    };
+
+    startScanner();
 
     return () => {
-      html5QrCode
-        .stop()
-        .then(() => html5QrCode.clear())
-        .catch((e) => console.error("Stop Error:", e));
+      if (html5QrCodeRef.current) {
+        html5QrCodeRef.current
+          .stop()
+          .then(() => html5QrCodeRef.current.clear())
+          .catch((e) => console.error("Stop Error:", e));
+      }
     };
   }, [hasPermission, facingMode]);
 
-  const handleScan = async (data) => {
+  const handleScan = async (data, position) => {
     console.log("Scanned QR Code:", data);
     try {
-      const position = await getUserLocation();
       const res = await axios.post(
         "https://scanme-wkq3.onrender.com/sessions/mark-attendance",
         {
@@ -198,7 +211,7 @@ export default function QRScanner({ sessionId, studentId, onSuccess }) {
         }
       );
       setResult(res.data.message);
-      if (onSuccess) onSuccess(); // closes modal
+      if (onSuccess) onSuccess(); // closes modal, should not navigate
     } catch (error) {
       console.error("Error marking attendance:", error);
       setResult(error.response?.data?.error || "Failed to mark attendance");
