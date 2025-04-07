@@ -52,15 +52,15 @@ const Login = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (token) {
-  //     if (localStorage.getItem("type") === "teacher") {
-  //       navigate("/teacher-dashboard");
-  //     } else {
-  //       navigate("/student-dashboard");
-  //     }
-  //   }
-  // }, [token, navigate]);
+  useEffect(() => {
+    if (token) {
+      if (localStorage.getItem("type") === "teacher") {
+        navigate("/teacher-dashboard");
+      } else {
+        navigate("/student-dashboard");
+      }
+    }
+  }, [token, navigate]);
 
   return (
     <div className={styles.loginMain}>

@@ -14,7 +14,6 @@ const Nav = () => {
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("email"));
-
     if (localStorage.getItem("email")) {
       setUserDetails({
         name: localStorage.getItem("name"),
@@ -29,39 +28,43 @@ const Nav = () => {
   };
 
   return (
-    <div className={`nav-container ${isLoggedIn ? "logged-in" : ""}`}>
-      <nav>
-        {/* Logo and Title */}
-        <div className="logo-container">
+    <div className={`nav-container ${isLoggedIn ? "nav-logged-in" : ""}`}>
+      <nav className="nav-bar">
+        <div className="nav-logo-container">
           <a href="/">
-            <div className="logo">
-              <img src="/logo3.png" alt="ScanMe Logo" className="logo-img" />
+            <div className="nav-logo">
+              <img
+                src="/logo3.png"
+                alt="ScanMe Logo"
+                className="nav-logo-img"
+              />
             </div>
           </a>
         </div>
 
-        {/* Show Profile & Logout Icons Only If Logged In */}
         {isLoggedIn && userDetails && (
-          <div className="icons-container">
-            {/* Profile Icon with Dropdown */}
-            <div className="profile-container">
-              <div className="icon-wrapper user-icon" onClick={toggleMenu}>
-                <Person4Icon className="person" />
+          <div className="nav-icons-container">
+            <div className="nav-profile-container">
+              <div
+                className="nav-icon-wrapper nav-user-icon"
+                onClick={toggleMenu}
+              >
+                <Person4Icon className="nav-person-icon" />
               </div>
 
-              {/* Dropdown Menu */}
               {showMenu && (
-                <div className="dropdown-menu" ref={menuRef}>
-                  <p className="user-name">{userDetails.name}</p>
-                  <p className="user-email">{userDetails.email}</p>
-                  <p className="user-dob">DOB: {userDetails.dob || "N/A"}</p>
+                <div className="nav-dropdown-menu" ref={menuRef}>
+                  <p className="nav-user-name">{userDetails.name}</p>
+                  <p className="nav-user-email">{userDetails.email}</p>
+                  <p className="nav-user-dob">
+                    DOB: {userDetails.dob || "N/A"}
+                  </p>
                 </div>
               )}
             </div>
 
-            {/* Logout Icon */}
             <div
-              className="logout-container"
+              className="nav-logout-container"
               onClick={() => navigate("/logout")}
             >
               <LogoutIcon />
