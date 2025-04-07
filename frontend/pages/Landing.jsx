@@ -28,14 +28,17 @@ const Landing = () => {
         <div className="landing-container">
           <div className="landing-content">
             <div className="landing-header">
-              <h1>ScanMe</h1>
+              <h1>AttendX</h1>
               <p className="landing-subtitle">QR-based Attendance System</p>
             </div>
             <div className="landing-buttons">
               <Link to="/login" className="landing-button landing-login-button">
                 Login
               </Link>
-              <Link to="/register" className="landing-button landing-register-button">
+              <Link
+                to="/register"
+                className="landing-button landing-register-button"
+              >
                 Register
               </Link>
             </div>
