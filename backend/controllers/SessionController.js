@@ -316,30 +316,30 @@ export const updateAttendanceStatus = async (req, res) => {
       return res.status(404).json({ error: "Session not found!" });
     }
 
-    const attendanceExists = session.attendance.some(
+    const attendanceRecord = session.attendance.find(
       (record) => record.studentId.toString() === studentId
     );
 
-    if (!attendanceExists) {
+    if (!attendanceRecord) {
       return res
         .status(404)
         .json({ error: "Student not found in attendance!" });
     }
 
-    // Rebuild attendance array
-    session.attendance = session.attendance.map((record) => {
-      if (record.studentId.toString() === studentId) {
-        return {
-          ...record.toObject(),
-          status,
-          scannedAt: status === "Present" ? new Date() : null,
-          scanLocation: status === "Present" ? record.scanLocation : null,
-        };
-      }
-      return record;
-    });
+    console.log("Request Body:", req.body);
+    console.log("Before Update:", attendanceRecord);
+
+    // Safely mutate the existing attendance subdocument
+    attendanceRecord.status = status;
+    attendanceRecord.scannedAt = status === "Present" ? new Date() : null;
+    attendanceRecord.scanLocation =
+      status === "Present" ? attendanceRecord.scanLocation : null;
+
+    session.markModified("attendance");
 
     await session.save();
+
+    console.log("After Update:", attendanceRecord);
 
     return res.json({ message: "Attendance status updated successfully!" });
   } catch (error) {
