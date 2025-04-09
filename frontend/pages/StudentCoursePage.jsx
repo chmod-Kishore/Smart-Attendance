@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { clientServer } from "../src/config";
-import styles from "../styles/StudentCoursePage.module.css"; // Changed to module CSS
+import styles from "../styles/StudentCoursePage.module.css";
 import QRScanner from "../pages/QRScanner";
 
 const StudentCoursePage = () => {
-  const { id } = useParams(); // Course ID from URL
+  const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sessionId, setSessionId] = useState("");
   const [studentId, setStudentId] = useState(null);
   const [showQRScanner, setShowQRScanner] = useState(false);
-  const [attendanceData, setAttendanceData] = useState([]);
+  const [attendanceData, setAttendanceData] = useState({});
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
-  const [refreshFlag, setRefreshFlag] = useState(false);
+
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
@@ -27,33 +27,32 @@ const StudentCoursePage = () => {
     };
 
     fetchCourseDetails();
-
-    // Fetch Student ID from Local Storage
     const storedStudentId = localStorage.getItem("id");
     if (storedStudentId) {
       setStudentId(storedStudentId);
     }
-  }, [id, refreshFlag]);
+  }, [id]);
 
-  const handleCheckAttendance = (session) => {
-    const studentAttendance = session.attendance.find(
-      (att) => att.studentId._id === studentId
-    );
-    if (studentAttendance) {
-      setAttendanceData({
-        status: studentAttendance.status,
-        name: studentAttendance.studentId.name,
-        rollNo: studentAttendance.studentId.rollNo,
-      });
-    } else {
-      setAttendanceData({
-        status: "Not Attended",
-        name: "N/A",
-        rollNo: "N/A",
-      });
-    }
-    setShowAttendanceModal(true);
-  };
+  // const handleCheckAttendance = (session) => {
+  //   const studentAttendance = session.attendance.find(
+  //     (att) => att.studentId._id === studentId
+  //   );
+
+  //   if (studentAttendance) {
+  //     setAttendanceData({
+  //       status: studentAttendance.status,
+  //       name: studentAttendance.studentId.name,
+  //       rollNo: studentAttendance.studentId.rollNo,
+  //     });
+  //   } else {
+  //     setAttendanceData({
+  //       status: "Not Attended",
+  //       name: "N/A",
+  //       rollNo: "N/A",
+  //     });
+  //   }
+  //   setShowAttendanceModal(true);
+  // };
 
   const isScannerEnabled = (session) => {
     const now = new Date();
@@ -86,9 +85,9 @@ const StudentCoursePage = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
         </div>
         <h3>Course Not Found</h3>
@@ -107,7 +106,8 @@ const StudentCoursePage = () => {
           <a href="/student-dashboard" className={styles["menu-item"]}>
             <span className={styles["menu-icon"]}>
               <svg
-                xwidth="18"
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
                 height="18"
                 viewBox="0 0 24 24"
                 fill="none"
@@ -116,11 +116,10 @@ const StudentCoursePage = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                mlns="http://www.w3.org/2000/svg"
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
               </svg>
             </span>
             <span>Back</span>
@@ -165,10 +164,10 @@ const StudentCoursePage = () => {
                 strokeLinejoin="round"
                 style={{ marginRight: "8px" }}
               >
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
               Available Sessions
             </h2>
@@ -249,10 +248,10 @@ const StudentCoursePage = () => {
                   strokeLinejoin="round"
                   style={{ marginBottom: "12px" }}
                 >
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
                 <p>No sessions available yet.</p>
               </div>
@@ -261,7 +260,6 @@ const StudentCoursePage = () => {
         </div>
       </main>
 
-      {/* Attendance Modal */}
       {showAttendanceModal && (
         <div className={styles.modal}>
           <div className={styles["modal-content"]}>
@@ -289,18 +287,10 @@ const StudentCoursePage = () => {
         </div>
       )}
 
-      {/* QR Scanner Modal */}
       {showQRScanner && (
         <div className={styles.modal}>
           <div className={styles["modal-content"]}>
-            <QRScanner
-              sessionId={sessionId}
-              studentId={studentId}
-              onSuccess={() => {
-                setShowQRScanner(false);
-                setRefreshFlag((prev) => !prev);
-              }}
-            />
+            <QRScanner sessionId={sessionId} studentId={studentId} />
             <div className={styles["modal-actions"]}>
               <button
                 className={styles["cancel-btn"]}
