@@ -257,6 +257,48 @@ export const markAttendance = async (req, res) => {
   }
 };
 // ✅ Update Attendance Status Manually
+// export const updateAttendanceStatus = async (req, res) => {
+//   try {
+//     const { sessionId, studentId, status } = req.body;
+
+//     if (!sessionId || !studentId || !status) {
+//       return res.status(400).json({ error: "All fields are required!" });
+//     }
+
+//     if (!["Present", "Absent"].includes(status)) {
+//       return res.status(400).json({ error: "Invalid status value!" });
+//     }
+
+//     const session = await Session.findById(sessionId);
+//     if (!session) {
+//       return res.status(404).json({ error: "Session not found!" });
+//     }
+
+//     const studentAttendance = session.attendance.find(
+//       (record) => record.studentId.toString() === studentId
+//     );
+
+//     if (!studentAttendance) {
+//       return res
+//         .status(404)
+//         .json({ error: "Student not found in attendance!" });
+//     }
+
+//     studentAttendance.status = status;
+//     studentAttendance.scannedAt = status === "Present" ? new Date() : null;
+//     studentAttendance.scanLocation =
+//       status === "Present" ? studentAttendance.scanLocation : null;
+
+//     session.markModified("attendance");
+//     await session.save();
+
+//     return res.json({ message: "Attendance status updated successfully!" });
+//   } catch (error) {
+//     console.error("Error updating attendance status:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 export const updateAttendanceStatus = async (req, res) => {
   try {
     const { sessionId, studentId, status } = req.body;
@@ -274,22 +316,29 @@ export const updateAttendanceStatus = async (req, res) => {
       return res.status(404).json({ error: "Session not found!" });
     }
 
-    const studentAttendance = session.attendance.find(
+    const attendanceExists = session.attendance.some(
       (record) => record.studentId.toString() === studentId
     );
 
-    if (!studentAttendance) {
+    if (!attendanceExists) {
       return res
         .status(404)
         .json({ error: "Student not found in attendance!" });
     }
 
-    studentAttendance.status = status;
-    studentAttendance.scannedAt = status === "Present" ? new Date() : null;
-    studentAttendance.scanLocation =
-      status === "Present" ? studentAttendance.scanLocation : null;
+    // Rebuild attendance array
+    session.attendance = session.attendance.map((record) => {
+      if (record.studentId.toString() === studentId) {
+        return {
+          ...record.toObject(),
+          status,
+          scannedAt: status === "Present" ? new Date() : null,
+          scanLocation: status === "Present" ? record.scanLocation : null,
+        };
+      }
+      return record;
+    });
 
-    session.markModified("attendance");
     await session.save();
 
     return res.json({ message: "Attendance status updated successfully!" });
