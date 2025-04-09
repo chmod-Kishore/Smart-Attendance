@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { SHA256 } from "crypto-js";
 import "../styles/ForgotPassword.css";
 
 const ForgotPassword = () => {

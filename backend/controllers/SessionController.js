@@ -289,6 +289,7 @@ export const updateAttendanceStatus = async (req, res) => {
     studentAttendance.scanLocation =
       status === "Present" ? studentAttendance.scanLocation : null;
 
+    session.markModified("attendance");
     await session.save();
 
     return res.json({ message: "Attendance status updated successfully!" });

@@ -43,7 +43,6 @@ export default function QRScanner({ sessionId, studentId }) {
     if (!data) return;
 
     console.log("Scanned QR Code Data:", data);
-
     try {
       const position = await getUserLocation();
       const res = await axios.post(

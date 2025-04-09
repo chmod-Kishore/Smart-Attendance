@@ -143,7 +143,8 @@ async function ForgotPassword(req, res) {
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
   }
-
+  console.log("Email:", email);
+  console.log("Password:", password);
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     let user = await Student.findOne({ email });
