@@ -298,7 +298,6 @@ export const markAttendance = async (req, res) => {
 //     res.status(500).json({ error: "Internal server error" });
 //   }
 // };
-
 export const updateAttendanceStatus = async (req, res) => {
   try {
     const { sessionId, studentId, status } = req.body;
@@ -331,9 +330,9 @@ export const updateAttendanceStatus = async (req, res) => {
 
     // Safely mutate the existing attendance subdocument
     attendanceRecord.status = status;
-    attendanceRecord.scannedAt = status === "Present" ? new Date() : null;
+    attendanceRecord.scannedAt = status === "Present" ? new Date() : undefined;
     attendanceRecord.scanLocation =
-      status === "Present" ? attendanceRecord.scanLocation : null;
+      status === "Present" ? attendanceRecord.scanLocation : undefined;
 
     session.markModified("attendance");
 
