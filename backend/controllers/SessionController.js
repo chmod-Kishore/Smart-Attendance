@@ -106,6 +106,78 @@ const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
 };
 
 // ✅ Mark Attendance with Radius and Expiry Check
+// export const markAttendance = async (req, res) => {
+//   try {
+//     console.log("Received markAttendance request:", req.body);
+
+//     const { studentId, sessionId, latitude, longitude, scannedQRData } =
+//       req.body;
+
+//     if (!studentId || !sessionId || !latitude || !longitude || !scannedQRData) {
+//       return res.status(400).json({ error: "All fields are required!" });
+//     }
+
+//     const session = await Session.findById(sessionId);
+//     if (!session) {
+//       return res.status(404).json({ error: "Session not found!" });
+//     }
+//     let qrData;
+//     try {
+//       qrData = JSON.parse(scannedQRData);
+//       console.log("Parsed QR Data:", qrData);
+//     } catch (error) {
+//       return res.status(400).json({ error: "Invalid QR Code!" });
+//     }
+
+//     if (qrData.sessionId !== session._id.toString()) {
+//       return res.status(400).json({ error: "QR Code does not match session!" });
+//     }
+
+//     if (Date.now() - qrData.timestamp > 40000) {
+//       return res.status(400).json({ error: "QR Code expired!" });
+//     }
+
+//     const distance = getDistanceFromLatLonInMeters(
+//       session.location.latitude,
+//       session.location.longitude,
+//       latitude,
+//       longitude
+//     );
+
+//     if (distance > session.radius) {
+//       return res
+//         .status(400)
+//         .json({ error: "You are outside the allowed radius!" });
+//     }
+
+//     let studentAttendance = session.attendance.find(
+//       (record) => record.studentId.toString() === studentId
+//     );
+
+//     if (studentAttendance) {
+//       if (studentAttendance.status === "Present") {
+//         return res.status(400).json({ error: "Attendance already marked!" });
+//       }
+//       studentAttendance.status = "Present";
+//       studentAttendance.scannedAt = new Date();
+//       studentAttendance.scanLocation = { latitude, longitude };
+//     } else {
+//       session.attendance.push({
+//         studentId,
+//         status: "Present",
+//         scannedAt: new Date(),
+//         scanLocation: { latitude, longitude },
+//       });
+//     }
+
+//     await session.save();
+//     return res.json({ message: "Attendance marked successfully!" });
+//   } catch (error) {
+//     console.error("Error marking attendance:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 export const markAttendance = async (req, res) => {
   try {
     console.log("Received markAttendance request:", req.body);
@@ -121,6 +193,10 @@ export const markAttendance = async (req, res) => {
     if (!session) {
       return res.status(404).json({ error: "Session not found!" });
     }
+
+    console.log("Session Location:", session.location);
+    console.log("User Location:", { latitude, longitude });
+    console.log("Allowed Radius:", session.radius);
 
     let qrData;
     try {
@@ -144,6 +220,8 @@ export const markAttendance = async (req, res) => {
       latitude,
       longitude
     );
+
+    console.log("Calculated Distance:", distance);
 
     if (distance > session.radius) {
       return res
@@ -178,7 +256,6 @@ export const markAttendance = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 // ✅ Update Attendance Status Manually
 export const updateAttendanceStatus = async (req, res) => {
   try {

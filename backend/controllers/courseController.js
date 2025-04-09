@@ -74,7 +74,7 @@ export const joinClass = async (req, res) => {
     }
 
     // ✅ Find Course by Invitation Code
-    const foundCourse = await Course.findOne({ courseName });
+    const foundCourse = await Course.findOne({ invitationCode });
 
     if (!foundCourse) {
       return res.status(404).json({ error: "Invalid invitation code" });
