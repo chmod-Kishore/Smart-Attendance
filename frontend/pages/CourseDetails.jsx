@@ -47,6 +47,7 @@ const CourseDetails = () => {
 
   const handleCheckAttendance = (session) => {
     setAttendanceData(session.attendance);
+    setSelectedSessionId(session._id);
     setShowAttendanceModal(true);
   };
 
@@ -102,6 +103,10 @@ const CourseDetails = () => {
   };
 
   const handleUpdateAttendance = async () => {
+    console.log("selectedSessionId:", selectedSessionId);
+    console.log("selectedStudent:", selectedStudent);
+    console.log("newStatus:", newStatus);
+
     if (!selectedSessionId || !selectedStudent || !newStatus) {
       return alert("All fields are required!");
     }
@@ -412,13 +417,7 @@ const CourseDetails = () => {
                             className={styles["action-btn"]}
                             onClick={() => {
                               setSelectedStudent(att.studentId);
-                              setSelectedSessionId(
-                                course.sessions.find((s) =>
-                                  s.attendance.some(
-                                    (a) => a.studentId._id === att.studentId._id
-                                  )
-                                )._id
-                              );
+                              // setSelectedSessionId(sessionId); // use correct current session context here
                               setShowUpdateAttendanceModal(true);
                             }}
                           >
