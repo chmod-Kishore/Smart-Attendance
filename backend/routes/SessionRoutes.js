@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/create", createSession);
 router.post("/mark-attendance", markAttendance);
-router.post("/update-attendance-status", updateAttendanceStatus);
+router.patch("/update-attendance-status", updateAttendanceStatus);
 
 export default router;
