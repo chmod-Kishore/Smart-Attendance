@@ -107,6 +107,9 @@ const CourseDetails = () => {
     }
 
     try {
+      console.log(selectedSessionId);
+      console.log(selectedStudent._id);
+      console.log(newStatus);
       const res = await axios.patch(
         "https://scanme-wkq3.onrender.com/sessions/update-attendance-status",
         {

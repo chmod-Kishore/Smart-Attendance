@@ -24,7 +24,7 @@ const allowedOrigins = [
   "https://qrcheck-htnc.onrender.com", // Your deployed frontend
 ];
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ origin: allowedOrigins }));
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.static("public"));
