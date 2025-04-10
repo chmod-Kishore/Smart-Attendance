@@ -107,7 +107,7 @@ const CourseDetails = () => {
     }
 
     try {
-      const res = await axios.post(
+      const res = await axios.patch(
         "https://scanme-wkq3.onrender.com/sessions/update-attendance-status",
         {
           sessionId: selectedSessionId,
