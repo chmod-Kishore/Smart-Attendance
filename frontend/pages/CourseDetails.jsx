@@ -243,7 +243,7 @@ const CourseDetails = () => {
                     <tr>
                       <th>Name</th>
                       <th>Roll No</th>
-                      <th>Department</th>
+
                       <th>Branch</th>
                     </tr>
                   </thead>
@@ -252,7 +252,7 @@ const CourseDetails = () => {
                       <tr key={student._id}>
                         <td>{student.name}</td>
                         <td>{student.rollNo}</td>
-                        <td>{student.dept}</td>
+
                         <td>{student.branch}</td>
                       </tr>
                     ))}
@@ -468,7 +468,7 @@ const CourseDetails = () => {
                 className={styles["join-btn"]}
                 onClick={handleUpdateAttendance}
               >
-                Update Status
+                Update
               </button>
             </div>
           </div>

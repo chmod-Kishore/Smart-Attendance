@@ -63,6 +63,52 @@ export const getTeacherClasses = async (req, res) => {
 };
 
 // 🟢 Student Joins Class Using Invitation Code
+// export const joinClass = async (req, res) => {
+//   try {
+//     const { courseName, studentId, invitationCode } = req.body;
+
+//     if (!studentId || !invitationCode || !courseName) {
+//       return res
+//         .status(400)
+//         .json({ error: "Student ID and Invitation Code required" });
+//     }
+
+//     // ✅ Find Course by Invitation Code
+//     const foundCourse = await Course.findOne({ invitationCode });
+
+//     if (!foundCourse) {
+//       return res.status(404).json({ error: "Invalid invitation code" });
+//     }
+
+//     // ✅ Check if Student Already Enrolled
+//     if (foundCourse.students.includes(studentId)) {
+//       return res.status(400).json({ error: "Already enrolled in this class" });
+//     }
+
+//     // ✅ Add Student to the Course
+//     foundCourse.students.push(studentId);
+//     await foundCourse.save();
+
+//     // ✅ Add Course to the Student's List
+//     const student = await Student.findById(studentId);
+
+//     if (!student) {
+//       return res.status(404).json({ error: "Student not found" });
+//     }
+
+//     student.courses.push(foundCourse._id);
+//     await student.save();
+
+//     res.status(200).json({
+//       message: "Successfully joined the class",
+//       course: foundCourse,
+//     });
+//   } catch (error) {
+//     console.error("Error joining class:", error);
+//     res.status(500).json({ error: "Error joining class" });
+//   }
+// };
+
 export const joinClass = async (req, res) => {
   try {
     const { courseName, studentId, invitationCode } = req.body;
@@ -73,31 +119,22 @@ export const joinClass = async (req, res) => {
         .json({ error: "Student ID and Invitation Code required" });
     }
 
-    // ✅ Find Course by Invitation Code
+    // ✅ Find Course
     const foundCourse = await Course.findOne({ invitationCode });
 
     if (!foundCourse) {
       return res.status(404).json({ error: "Invalid invitation code" });
     }
 
-    // ✅ Check if Student Already Enrolled
-    if (foundCourse.students.includes(studentId)) {
-      return res.status(400).json({ error: "Already enrolled in this class" });
-    }
+    // ✅ Add Student to Course (no duplicates)
+    await Course.findByIdAndUpdate(foundCourse._id, {
+      $addToSet: { students: studentId },
+    });
 
-    // ✅ Add Student to the Course
-    foundCourse.students.push(studentId);
-    await foundCourse.save();
-
-    // ✅ Add Course to the Student's List
-    const student = await Student.findById(studentId);
-
-    if (!student) {
-      return res.status(404).json({ error: "Student not found" });
-    }
-
-    student.courses.push(foundCourse._id);
-    await student.save();
+    // ✅ Add Course to Student (no duplicates)
+    await Student.findByIdAndUpdate(studentId, {
+      $addToSet: { courses: foundCourse._id },
+    });
 
     res.status(200).json({
       message: "Successfully joined the class",

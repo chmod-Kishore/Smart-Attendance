@@ -521,3 +521,29 @@
 }
 
 
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+/* Make buttons full width on mobile */
+.cancel-btn,
+.join-btn {
+  width: 100%;
+}
+
+/* On wider screens, show buttons side-by-side */
+@media (min-width: 480px) {
+  .modal-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .cancel-btn,
+  .join-btn {
+    width: auto;
+    min-width: 100px;
+  }
+}
