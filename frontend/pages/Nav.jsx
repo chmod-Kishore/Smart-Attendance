@@ -34,7 +34,7 @@ const Nav = () => {
           <a href="/">
             <div className="nav-logo">
               <img
-                src="/logo3.png"
+                src="/logo6.png"
                 alt="ScanMe Logo"
                 className="nav-logo-img"
               />

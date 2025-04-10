@@ -27,6 +27,7 @@ const CourseDetails = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const [newStatus, setNewStatus] = useState("Present");
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
 
   const fetchCourseDetails = async () => {
     try {
@@ -70,6 +71,9 @@ const CourseDetails = () => {
   };
 
   const handleCreateSession = async () => {
+    if (isCreatingSession) return; // Prevent duplicate clicks
+    setIsCreatingSession(true); // Disable the button
+
     if (
       !sessionDetails.courseId ||
       !sessionDetails.latitude ||
@@ -92,6 +96,8 @@ const CourseDetails = () => {
     } catch (error) {
       console.error("Error creating session:", error);
       alert("Failed to create session.");
+    } finally {
+      setIsCreatingSession(false); // Re-enable the button
     }
   };
 
@@ -358,8 +364,9 @@ const CourseDetails = () => {
               <button
                 className={styles["join-btn"]}
                 onClick={handleCreateSession}
+                disabled={isCreatingSession}
               >
-                Create Session
+                {isCreatingSession ? "Creating..." : "Create Session"}
               </button>
             </div>
           </div>

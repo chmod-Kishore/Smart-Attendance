@@ -16,7 +16,16 @@ export const createSession = async (req, res) => {
     if (!course) {
       return res.status(404).json({ error: "Course not found!" });
     }
+    // const existingSession = await Session.findOne({
+    //   courseId,
+    //   expiresAt: { $gt: new Date() }, // Check if the session has not expired
+    // });
 
+    // if (existingSession) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "An active session already exists for this course!" });
+    // }
     // Generate session data for QR Code
     const sessionData = `${courseId}-${Date.now()}`;
     const qrCodeUrl = await QRCode.toDataURL(sessionData);
@@ -187,6 +196,64 @@ export const markAttendance = async (req, res) => {
   }
 };
 
+// export const updateAttendanceStatus = async (req, res) => {
+//   try {
+//     console.log("Request Body:", req.body);
+//     const { sessionId, studentId, status } = req.body;
+
+//     if (!sessionId || !studentId || !status) {
+//       return res.status(400).json({ error: "All fields are required!" });
+//     }
+
+//     if (!["Present", "Absent"].includes(status)) {
+//       return res.status(400).json({ error: "Invalid status value!" });
+//     }
+
+//     const session = await Session.findById(sessionId);
+//     if (!session) {
+//       return res.status(404).json({ error: "Session not found!" });
+//     }
+//     const objectStudentId = new mongoose.Types.ObjectId(studentId);
+//     console.log(
+//       "Session Attendance:",
+//       session.attendance.map((r) => r.studentId.toString())
+//     );
+
+//     const attendanceRecord = session.attendance.find((record) =>
+//       record.studentId.equals(objectStudentId)
+//     );
+
+//     if (!attendanceRecord) {
+//       return res
+//         .status(404)
+//         .json({ error: "Student not found in attendance!" });
+//     }
+
+//     console.log("Before Update:", attendanceRecord);
+
+//     attendanceRecord.status = status;
+//     attendanceRecord.scannedAt = status === "Present" ? new Date() : undefined;
+//     attendanceRecord.scanLocation =
+//       status === "Present" ? session.location : undefined;
+
+//     // Either keep this if needed or comment to test
+//     session.markModified("attendance");
+
+//     await session.save();
+
+//     const updated = await Session.findById(sessionId);
+//     console.log(
+//       "After Save:",
+//       updated.attendance.find((r) => r.studentId.equals(studentId))
+//     );
+
+//     return res.json({ message: "Attendance status updated successfully!" });
+//   } catch (error) {
+//     console.error("Error updating attendance status:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
 export const updateAttendanceStatus = async (req, res) => {
   try {
     console.log("Request Body:", req.body);
@@ -204,38 +271,40 @@ export const updateAttendanceStatus = async (req, res) => {
     if (!session) {
       return res.status(404).json({ error: "Session not found!" });
     }
-    const objectStudentId = new mongoose.Types.ObjectId(studentId);
+
     console.log(
-      "Session Attendance:",
-      session.attendance.map((r) => r.studentId.toString())
+      "Session Attendance Before Update:",
+      session.attendance.map((r) => ({
+        studentId: r.studentId.toString(),
+        status: r.status,
+      }))
     );
 
-    const attendanceRecord = session.attendance.find((record) =>
-      record.studentId.equals(objectStudentId)
+    // Remove the existing attendance record for the student
+    session.attendance = session.attendance.filter(
+      (record) => record.studentId.toString() !== studentId
     );
 
-    if (!attendanceRecord) {
-      return res
-        .status(404)
-        .json({ error: "Student not found in attendance!" });
-    }
+    // Add the updated attendance record
+    session.attendance.push({
+      studentId: new mongoose.Types.ObjectId(studentId),
+      status,
+      scannedAt: status === "Present" ? new Date() : undefined,
+      scanLocation: status === "Present" ? session.location : undefined,
+    });
 
-    console.log("Before Update:", attendanceRecord);
-
-    attendanceRecord.status = status;
-    attendanceRecord.scannedAt = status === "Present" ? new Date() : undefined;
-    attendanceRecord.scanLocation =
-      status === "Present" ? session.location : undefined;
-
-    // Either keep this if needed or comment to test
+    // Mark the attendance array as modified
     session.markModified("attendance");
 
+    // Save the updated session
     await session.save();
 
-    const updated = await Session.findById(sessionId);
     console.log(
-      "After Save:",
-      updated.attendance.find((r) => r.studentId.equals(studentId))
+      "Session Attendance After Update:",
+      session.attendance.map((r) => ({
+        studentId: r.studentId.toString(),
+        status: r.status,
+      }))
     );
 
     return res.json({ message: "Attendance status updated successfully!" });
