@@ -2,6 +2,7 @@ import QRCode from "qrcode";
 import { Session } from "../model/Session.js";
 import { Course } from "../model/Course.js";
 import { Student } from "../model/Student.js";
+import mongoose from "mongoose";
 
 export const createSession = async (req, res) => {
   try {
