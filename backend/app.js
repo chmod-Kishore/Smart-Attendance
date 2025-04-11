@@ -20,11 +20,23 @@ const PORT = process.env.PORT || 5050;
 const MONGODB_URI = process.env.MONGODB;
 
 const allowedOrigins = [
-  "http://localhost:5173", // Dev environment
-  "https://qrcheck-htnc.onrender.com", // Your deployed frontend
+  "http://localhost:5173",
+  "https://qrcheck-htnc.onrender.com",
 ];
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.static("public"));
