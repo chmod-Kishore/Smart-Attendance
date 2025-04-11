@@ -39,6 +39,7 @@ const ForgotPassword = () => {
         "https://scanme-wkq3.onrender.com/users/sendmail",
         {
           email: email,
+          type: "forgot",
         }
       );
 

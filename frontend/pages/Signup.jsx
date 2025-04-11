@@ -73,6 +73,7 @@ const Signup = () => {
         "https://scanme-wkq3.onrender.com/users/sendmail",
         {
           email,
+          type: "registration",
         }
       );
       setOtp(res.data.otp);
@@ -112,7 +113,7 @@ const Signup = () => {
             <h2>Welcome to AttendX!</h2>
             <p>Please enter your details</p>
           </div>
-          
+
           <form onSubmit={handleRegisterSubmit} className={styles.signupForm}>
             {/* Step 1: Basic Details */}
             <div className={styles.firstSlide}>
@@ -128,18 +129,34 @@ const Signup = () => {
                   <option value="teacher">Teacher</option>
                 </select>
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" placeholder="Enter your name" name="name" required />
-              </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" placeholder="Enter your email" name="email" required />
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Enter your name"
+                  name="name"
+                  required
+                />
               </div>
 
-              <button type="button" className={styles.signupButton} onClick={toggleTwo}>
+              <div className={styles.formGroup}>
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Enter your email"
+                  name="email"
+                  required
+                />
+              </div>
+
+              <button
+                type="button"
+                className={styles.signupButton}
+                onClick={toggleTwo}
+              >
                 Next
               </button>
             </div>
@@ -148,14 +165,28 @@ const Signup = () => {
             <div className={styles.secondSlide} style={{ display: "none" }}>
               <div className={styles.formGroup}>
                 <label htmlFor="otp">OTP Verification</label>
-                <input type="text" id="otp" placeholder="Enter OTP" name="otp" required />
+                <input
+                  type="text"
+                  id="otp"
+                  placeholder="Enter OTP"
+                  name="otp"
+                  required
+                />
               </div>
-              
+
               <div className={styles.buttonGroup}>
-                <button type="button" className={styles.secondaryButton} onClick={() => window.location.reload()}>
+                <button
+                  type="button"
+                  className={styles.secondaryButton}
+                  onClick={() => window.location.reload()}
+                >
                   Edit Email
                 </button>
-                <button type="button" className={styles.signupButton} onClick={toggleThree}>
+                <button
+                  type="button"
+                  className={styles.signupButton}
+                  onClick={toggleThree}
+                >
                   Submit
                 </button>
               </div>
@@ -175,7 +206,7 @@ const Signup = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className={styles.formGroup}>
                     <label htmlFor="branch">Branch</label>
                     <select name="branch" id="branch" required>
@@ -204,13 +235,17 @@ const Signup = () => {
                   <option value="Electronics">Electronics</option>
                 </select>
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="dob">Date of Birth</label>
                 <input type="date" id="dob" name="dob" required />
               </div>
 
-              <button type="button" className={styles.signupButton} onClick={toggleFour}>
+              <button
+                type="button"
+                className={styles.signupButton}
+                onClick={toggleFour}
+              >
                 Next
               </button>
             </div>
@@ -235,7 +270,7 @@ const Signup = () => {
                   />
                 </div>
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="confirmPassword">Confirm Password</label>
                 <div className={styles.passwordContainer}>
@@ -254,10 +289,13 @@ const Signup = () => {
               </button>
             </div>
           </form>
-          
+
           <div className={styles.signupFooter}>
             <p>
-              Already have an account? <Link to="/login" className={styles.loginLink}>Login</Link>
+              Already have an account?{" "}
+              <Link to="/login" className={styles.loginLink}>
+                Login
+              </Link>
             </p>
           </div>
         </div>

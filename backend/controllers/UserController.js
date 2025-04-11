@@ -98,45 +98,6 @@ async function Signup(req, res) {
   }
 }
 
-// async function ForgotPassword(req, res) {
-//   const { email, password } = req.body;
-
-//   if (!email || !password) {
-//     return res.status(400).json({ message: "Email and password are required" });
-//   }
-
-//   try {
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     console.log("Hashed password:", hashedPassword);
-
-//     let user = await Student.findOne({ email });
-
-//     if (user) {
-//       await Student.updateOne(
-//         { email },
-//         { $set: { password: hashedPassword } }
-//       );
-//     } else {
-//       user = await Teacher.findOne({ email });
-//       if (user) {
-//         await Teacher.updateOne(
-//           { email },
-//           { $set: { password: hashedPassword } }
-//         );
-//       }
-//     }
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     return res.status(200).json({ message: "Password reset successful" });
-//   } catch (err) {
-//     console.error("Error resetting password:", err);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// }
-
 async function ForgotPassword(req, res) {
   const { email, password } = req.body;
 
@@ -194,37 +155,85 @@ async function ForgotPassword(req, res) {
 // }
 
 //send mail
-function SendMail(req, res) {
-  const { email } = req.body;
+// function SendMail(req, res) {
+//   const { email } = req.body;
+//   const otp = Math.floor(100000 + Math.random() * 900000);
+//   const transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//       user: process.env.EMAIL,
+//       pass: process.env.PASSWORD,
+//     },
+//   });
+
+//   const mailOptions = {
+//     from: process.env.EMAIL,
+//     to: email,
+//     subject: "OTP for registration",
+//     text: `Your OTP is ${otp}`,
+//   };
+
+//   transporter.sendMail(mailOptions, (error, info) => {
+//     if (error) {
+//       res
+//         .status(500)
+//         .json({ message: "Failed to send OTP. Please try again." });
+//     } else {
+//       console.log("Email sent: " + info.response);
+//       res.status(200).json({
+//         message: "OTP sent successfully. Please check your email.",
+//         otp: otp,
+//       });
+//     }
+//   });
+// }
+
+async function SendMail(req, res) {
+  const { email, type } = req.body;
   const otp = Math.floor(100000 + Math.random() * 900000);
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
-    },
-  });
 
-  const mailOptions = {
-    from: process.env.EMAIL,
-    to: email,
-    subject: "OTP for registration",
-    text: `Your OTP is ${otp}`,
-  };
+  let subject, text;
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to send OTP. Please try again." });
-    } else {
-      console.log("Email sent: " + info.response);
-      res.status(200).json({
-        message: "OTP sent successfully. Please check your email.",
-        otp: otp,
-      });
-    }
-  });
+  if (type === "registration") {
+    subject = "Your OTP for Registration";
+    text = `Hello,
+
+Thank you for signing up!
+
+Your One-Time Password (OTP) for completing your registration is: ${otp}
+
+Please enter this OTP to verify your email. This OTP is valid for the next 10 minutes.
+
+If you did not initiate this request, feel free to ignore this email.
+
+Best regards,  
+Team AttendX`;
+  } else if (type === "forgot") {
+    subject = "OTP to Reset Your Password";
+    text = `Hi,
+
+You recently requested to reset your password.
+
+Use the following OTP to proceed: ${otp}
+
+If you didn't request a password reset, you can safely ignore this email.
+
+Thanks,  
+The Support Team`;
+  } else {
+    return res.status(400).json({ message: "Invalid email type." });
+  }
+
+  const result = await Mailer.sendMail(email, subject, text);
+
+  if (result.success) {
+    res.status(200).json({
+      message: "OTP sent successfully. Please check your email.",
+      otp: otp,
+    });
+  } else {
+    res.status(500).json({ message: "Failed to send OTP. Please try again." });
+  }
 }
 
 async function GetUserDetails(req, res) {
