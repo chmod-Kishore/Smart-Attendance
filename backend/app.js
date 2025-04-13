@@ -22,6 +22,7 @@ const MONGODB_URI = process.env.MONGODB;
 const allowedOrigins = [
   "http://localhost:5173",
   "https://qrcheck-htnc.onrender.com",
+  "https://attendx-4d61.onrender.com",
 ];
 
 app.use(
