@@ -36,7 +36,6 @@ body {
   padding: 5px;
   background-color: transparent;
   box-shadow: none;
-  transition: transform 0.3s ease-in-out;
 }
 
 .nav-logo-img {
@@ -47,6 +46,7 @@ body {
 
 .nav-logo:hover {
   transform: scale(1.2);
+  transition: transform 0.3s ease-in-out;
 }
 
 .nav-icons-container {
