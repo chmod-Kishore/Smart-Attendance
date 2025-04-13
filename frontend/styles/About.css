@@ -92,6 +92,7 @@
 
 .next {
   right: 10px;
+  
 }
 
 .prev {
@@ -99,7 +100,7 @@
 }
 
 .skipbtn {
-  padding: 10px 20px;
+  padding: 10px 25px;
   font-size: medium;
   position: absolute;
   top: 95%;
@@ -107,4 +108,7 @@
   cursor: pointer;
   transform: translateY(-100%);
   z-index: 10000;
+  border-radius: 8px;
+  background-color: #141824;
+  color: white;
 }

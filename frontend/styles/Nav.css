@@ -132,15 +132,15 @@ body {
   }
 
   .nav-logo {
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 50px;
   }
 }
 
 @media (max-width: 600px) {
   .nav-logo {
-    width: 32px;
-    height: 32px;
+    width: 72px;
+    height: 45px;
   }
 
   .nav-icons-container {

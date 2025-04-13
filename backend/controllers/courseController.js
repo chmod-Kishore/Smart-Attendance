@@ -131,8 +131,6 @@ export const getStudentClasses = async (req, res) => {
   }
 };
 
-//import { Course } from "../models/Course.js";
-
 export const getCourseDetails = async (req, res) => {
   try {
     const { id } = req.params;

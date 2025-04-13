@@ -33,27 +33,6 @@ const StudentCoursePage = () => {
     }
   }, [id]);
 
-  // const handleCheckAttendance = (session) => {
-  //   const studentAttendance = session.attendance.find(
-  //     (att) => att.studentId._id === studentId
-  //   );
-
-  //   if (studentAttendance) {
-  //     setAttendanceData({
-  //       status: studentAttendance.status,
-  //       name: studentAttendance.studentId.name,
-  //       rollNo: studentAttendance.studentId.rollNo,
-  //     });
-  //   } else {
-  //     setAttendanceData({
-  //       status: "Not Attended",
-  //       name: "N/A",
-  //       rollNo: "N/A",
-  //     });
-  //   }
-  //   setShowAttendanceModal(true);
-  // };
-
   const isScannerEnabled = (session) => {
     const now = new Date();
     const sessionStart = new Date(session.date);

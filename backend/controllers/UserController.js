@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-import nodemailer from "nodemailer";
 import { Student } from "../model/Student.js";
 import { Teacher } from "../model/Teacher.js";
 import JWT from "../middleware/JWT.js";
@@ -135,60 +134,6 @@ async function ForgotPassword(req, res) {
   }
 }
 
-// //edit user details
-// async function EditUserDetails(req, res) {
-//   const { email, name, dob } = req.body;
-//   let user = await Student.findOne
-//     .findOneAndUpdate({ email }, { name, dob })
-//     .exec();
-//   if (!user) {
-//     user = await Teacher.findOneAndUpdate
-//       .findOneAndUpdate({ email }, { name, dob })
-//       .exec();
-//   }
-//   if (user) {
-//     res.status(200).json({ message: "User details updated successfully." });
-//   } else {
-//     res
-//       .status(404)
-//       .json({ message: "User not found. Please check the email provided." });
-//   }
-// }
-
-//send mail
-// function SendMail(req, res) {
-//   const { email } = req.body;
-//   const otp = Math.floor(100000 + Math.random() * 900000);
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: process.env.EMAIL,
-//       pass: process.env.PASSWORD,
-//     },
-//   });
-
-//   const mailOptions = {
-//     from: process.env.EMAIL,
-//     to: email,
-//     subject: "OTP for registration",
-//     text: `Your OTP is ${otp}`,
-//   };
-
-//   transporter.sendMail(mailOptions, (error, info) => {
-//     if (error) {
-//       res
-//         .status(500)
-//         .json({ message: "Failed to send OTP. Please try again." });
-//     } else {
-//       console.log("Email sent: " + info.response);
-//       res.status(200).json({
-//         message: "OTP sent successfully. Please check your email.",
-//         otp: otp,
-//       });
-//     }
-//   });
-// }
-
 async function SendMail(req, res) {
   const { email, type } = req.body;
   const otp = Math.floor(100000 + Math.random() * 900000);
@@ -265,7 +210,7 @@ const UserController = {
   Signup,
   ForgotPassword,
   SendMail,
-  GetUserDetails, // ✅ Add the new function
+  GetUserDetails,
 };
 
 export default UserController;
